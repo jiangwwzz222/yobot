@@ -151,5 +151,5 @@ class Gacha():
                 self.gacha()
             elif func_num == 2:
                 self.setting()
-            elif func_num == 3:
-                self.del_pool()
+        if func_num == 3:
+            self.del_pool()
