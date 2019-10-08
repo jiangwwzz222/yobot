@@ -41,7 +41,7 @@ class Gacha():
                 try:
                     self.__pool = json5.load(f)
                 except:
-                    self.txt_list.append("卡池文件解析错误，请检查卡池文件语法，或者删除卡池文件")
+                    self.txt_list.append("卡池文件解析错误，请检查卡池文件语法，或者“#重置卡池”")
                     return 2
         return 0
 
@@ -57,7 +57,8 @@ class Gacha():
                 if resu < 0:
                     if i == 9 and p.get("guarantee", None) != None:
                         p = self.__pool["pool"][p["guarantee"]]
-                    result_list.append(p["prefix"]+random.choice(p["pool"]))
+                    result_list.append(p.get("prefix", "") +
+                                       random.choice(p["pool"]))
                     break
         return result_list
 
@@ -128,12 +129,19 @@ class Gacha():
         else:
             self.txt_list.append("卡池文件丢失，下次抽卡时重新下载")
 
+    def del_pool(self):
+        if os.path.exists(os.path.join(self.__path, "pool.json5")):
+            os.remove(os.path.join(self.__path, "pool.json5"))
+        self.txt_list.append("卡池已重置")
+
     @staticmethod
     def match(cmd):
         if cmd == "十连" or cmd == "十连抽":
             return 1
         elif cmd == "十连设置" or cmd == "抽卡设置" or cmd == "卡池设置":
             return 2
+        elif cmd == "重置卡池" or cmd == "删除卡池":
+            return 3
         else:
             return 0
 
@@ -143,3 +151,5 @@ class Gacha():
                 self.gacha()
             elif func_num == 2:
                 self.setting()
+            elif func_num == 3:
+                self.del_pool()
