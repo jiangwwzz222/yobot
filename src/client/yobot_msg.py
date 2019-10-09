@@ -1,4 +1,6 @@
 # coding=utf-8
+import json
+import sys
 
 
 class Message():
@@ -26,7 +28,10 @@ class Message():
 
     @staticmethod
     def msg(func_num):
-        if func_num==99:
-            return "yobot [v2.2.2]"
+        if func_num == 99:
+            with open(os.path.join(os.path.dirname(sys.argv[0]), "reservation.json"),
+                      "r", encoding="utf-8") as f:
+                ver = json.load(f)["vername"]
+            return ver
         else:
             return "此功能已经不再可用，请查看https://yobot.xyz/functions_2/"
