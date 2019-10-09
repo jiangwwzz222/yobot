@@ -10,6 +10,8 @@ import requests
 
 
 class Consult():
+    URL = "http://api.yobot.xyz/v2/nicknames/?type=csv"
+
     def __init__(self):
         path = os.path.dirname(sys.argv[0])
         self.nickname = {}
@@ -18,7 +20,10 @@ class Consult():
         nickfile = os.path.join(path, "nickname.csv")
         self.txt_list = []
         if not os.path.exists(nickfile):
-            self.txt_list.append("nickname.csv文件不存在")
+            res = requests.get(self.URL)
+            assert res.status_code == 200, "服务器不可用"
+            with open(nickfile, "w", encoding="utf-8-sig") as f:
+                f.write(res.text)
         with open(nickfile, encoding="utf-8-sig")as f:
             f_csv = csv.reader(f)
             for row in f_csv:
