@@ -30,7 +30,7 @@ class Message():
     @staticmethod
     def msg(func_num):
         if func_num == 99:
-            with open(os.path.join(os.path.dirname(sys.argv[0]), "reservation.json"),
+            with open(os.path.join(os.path.dirname(sys.argv[0]), "version.json"),
                       "r", encoding="utf-8") as f:
                 ver = json.load(f)["vername"]
             return ver
