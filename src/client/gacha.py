@@ -122,6 +122,14 @@ class Gacha():
         return 0
 
     def setting(self):
+        ld = self.load()
+        if ld == 0:
+            masters = self.__pool.get("settings", {}).get("master", [])
+            if masters != [] and self.__qqid not in masters:
+                self.txt_list.append("对不起，你没有权限")
+                return
+        elif ld == 1:
+            return
         if os.path.exists(os.path.join(self.__path, "pool.json5")):
             os.system("start notepad " + os.path.join(
                 os.path.join(self.__path, "pool.json5")))
@@ -140,16 +148,17 @@ class Gacha():
             return 1
         elif cmd == "十连设置" or cmd == "抽卡设置" or cmd == "卡池设置":
             return 2
-        elif cmd == "重置卡池" or cmd == "删除卡池":
+        elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
             return 3
         else:
             return 0
 
     def gc(self, func_num):
+        if func_num == 2:
+            self.setting()
+        elif func_num == 3:
+            self.del_pool()
+            return
         if self.load() == 0:
             if func_num == 1:
                 self.gacha()
-            elif func_num == 2:
-                self.setting()
-        if func_num == 3:
-            self.del_pool()
