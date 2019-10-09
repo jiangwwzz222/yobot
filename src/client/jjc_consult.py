@@ -34,12 +34,14 @@ class Consult():
     def user_input(self, cmd):
         in_list = cmd.split()
         if len(in_list) > 5:
-            self.txt_list.append("error: more than 5")
+            self.txt_list.append("防守人数过多")
             return 5
         for index in in_list:
             item = self.nickname.get(index.lower(), "error")
             if item == "error":
-                self.txt_list.append("error: "+index+" not found")
+                self.txt_list.append("没有找到"+index+"，已发送反馈")
+                os.remove(os.path.join(os.path.dirname(
+                    sys.argv[0]), "nickname.csv"))
                 return 1
             self.def_lst.append(item)
         return 0
