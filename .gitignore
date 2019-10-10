@@ -1,3 +1,4 @@
-/src/client
-!/src/client/*.py
-!/src/client/*.md
+/src/client/*/
+/src/client/*.json
+/src/client/*.csv
+/src/client/*.db
