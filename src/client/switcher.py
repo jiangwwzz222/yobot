@@ -7,6 +7,7 @@ import sys
 
 class Switcher:
     func_list = ["抽卡", "jjc查询"]
+    data = {}
 
     def __init__(self):
         self.path = os.path.join(os.path.dirname(sys.argv[0]), "switcher.json")
