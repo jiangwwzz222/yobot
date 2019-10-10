@@ -148,6 +148,40 @@ class Gacha():
             os.remove(os.path.join(self.__path, "pool.json5"))
         self.txt_list.append("卡池已重置")
 
+    def show_colle(self):
+        if not os.path.exists(os.path.join(self.__path, "collections.db")):
+            self.txt_list.append("没有仓库")
+            return 1
+        db_conn = sqlite3.connect(os.path.join(self.__path, "collections.db"))
+        db = db_conn.cursor()
+        sql_info = list(db.execute(
+            "SELECT colle FROM Colle WHERE qqid=?", (self.__qqid,)))
+        if len(sql_info) != 1:
+            self.txt_list.append(self.__nickname + "的仓库为空")
+            db_conn.close()
+            return 2
+        colle = pickle.loads(sql_info[0][0])
+        if not os.path.exists(os.path.join(self.__path, "temp")):
+            os.mkdir(os.path.join(self.__path, "temp"))
+        colle_file = os.path.join(
+            self.__path, "temp",
+            str(self.__qqid)+time.strftime("_%Y%m%d_%H%M%S", time.localtime())+".csv")
+        with open(colle_file, "w", encoding="utf-8-sig") as f:
+            def d_line(d):
+                for k, v in zip(d.keys(), d.values()):
+                    yield str(k)+","+str(v)+"\n"
+            f.write("角色,数量\n")
+            f.writelines(d_line(colle))
+        f = open(colle_file, 'rb')
+        files = {'file': f}
+        response = requests.post(
+            'http://api.yobot.xyz/v2/reports/', files=files)
+        f.close()
+        p = response.text
+        self.txt_list.append(self.__nickname + "的仓库：" + p)
+        db_conn.close()
+        return 0
+
     @staticmethod
     def match(cmd):
         if cmd == "十连" or cmd == "十连抽":
@@ -156,6 +190,8 @@ class Gacha():
             return 2
         elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
             return 3
+        elif cmd == "仓库":
+            return 4
         else:
             return 0
 
@@ -164,6 +200,8 @@ class Gacha():
             self.setting()
         elif func_num == 3:
             self.del_pool()
+        elif func_num == 4:
+            self.show_colle()
         elif self.load() == 0:
             if func_num == 1:
                 self.gacha()
