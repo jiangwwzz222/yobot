@@ -138,6 +138,12 @@ class Gacha():
             self.txt_list.append("卡池文件丢失，下次抽卡时重新下载")
 
     def del_pool(self):
+        ld = self.load()
+        if ld == 0:
+            masters = self.__pool.get("settings", {}).get("master", [])
+            if masters != [] and self.__qqid not in masters:
+                self.txt_list.append("对不起，你没有权限")
+                return
         if os.path.exists(os.path.join(self.__path, "pool.json5")):
             os.remove(os.path.join(self.__path, "pool.json5"))
         self.txt_list.append("卡池已重置")
