@@ -21,7 +21,7 @@ class Switcher:
     def switch(self, func, sw):
         self.data[func] = sw
         with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(self.data, f, indent=2)
+            json.dump(self.data, f, indent=2, ensure_ascii=False)
 
     def match(self, cmd):
         if cmd.startswith("打开"):
