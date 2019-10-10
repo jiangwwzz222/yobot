@@ -23,8 +23,7 @@ class Switcher:
         with open(self.path, "w", encoding="utf-8") as f:
             json.dump(self.data, f, indent=2)
 
-    @staticmethod
-    def match(cmd):
+    def match(self, cmd):
         if cmd.startswith("打开"):
             f = 0x100
         elif cmd.startswith("关闭"):

@@ -39,7 +39,7 @@ def yobot(*cmd_list):
             return txt_list
         # 功能开关
         swt = Switcher()
-        func = Switcher.match(cmd)
+        func = swt.match(cmd)
         if func != 0:
             swt.sw(func)
             txt_list.extend(swt.txt_list)
