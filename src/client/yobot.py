@@ -91,7 +91,7 @@ def yobot(*cmd_list):
             txt_list.extend(rsv.txt_list)
             return txt_list  # 后面不再运行
     if txt_list == []:
-        txt_list.append("101无效命令")
+        txt_list.append("无效命令，请查看功能表")
     return txt_list
 
 
