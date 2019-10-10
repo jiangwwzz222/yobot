@@ -40,7 +40,7 @@ class Consult():
         for index in in_list:
             item = self.nickname.get(index.lower(), "error")
             if item == "error":
-                requests.get(Feedback_URL+index)
+                requests.get(self.Feedback_URL+index)
                 self.txt_list.append("没有找到"+index+"，已发送反馈")
                 os.remove(os.path.join(os.path.dirname(
                     sys.argv[0]), "nickname.csv"))
