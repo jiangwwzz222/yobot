@@ -63,6 +63,7 @@ class Gacha():
         return result_list
 
     def gacha(self):
+        self.check_ver()
         db_exists = os.path.exists(os.path.join(self.__path, "collections.db"))
         db_conn = sqlite3.connect(os.path.join(self.__path, "collections.db"))
         db = db_conn.cursor()
@@ -181,6 +182,31 @@ class Gacha():
         self.txt_list.append(self.__nickname + "的仓库：" + p)
         db_conn.close()
         return 0
+
+    def check_ver(self):
+        auto_update = self.__pool.get("settings", {}).get("联网更新卡池", False)
+        if not auto_update:
+            return
+        f = open(os.path.join(self.__path, "version.json"),
+                 "r+", encoding="utf-8")
+        ver = json5.load(f)
+        now = int(time.time())
+        if ver.get("pool_checktime", 0) < now:
+            res = requests.get(self.URL)
+            if res.status_code == 200:
+                online_ver = json5.loads(res.text)
+                if self.__pool["info"]["name"] != online_ver["info"]["name"]:
+                    self.__pool = online_ver
+                    with open(os.path.join(self.__path, "pool.json5"), "w", encoding="utf-8") as pf:
+                        pf.write(res.text)
+                    self.txt_list.append("卡池已自动更新，目前卡池：" +
+                                         self.__pool["info"]["name"])
+                ver["pool_checktime"] = now + 80000
+                f.seek(0)
+                f.truncate()
+                json5.dump(ver, f, indent=2,
+                           quote_keys=True, trailing_commas=False)
+        f.close()
 
     @staticmethod
     def match(cmd):
