@@ -223,7 +223,7 @@ class Gacha():
             return 2
         elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
             return 3
-        elif cmd.startwith("仓库"):
+        elif cmd.startswith("仓库"):
             return 4
         else:
             return 0

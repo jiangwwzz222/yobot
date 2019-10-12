@@ -90,7 +90,7 @@ def yobot(*cmd_list):
             rsv.rsv(cmd, func)
             txt_list.extend(rsv.txt_list)
             return txt_list  # 后面不再运行
-    if txt_list == []:
+    if txt_list == [] and switcher.get("无效命令提示", True) != False:
         txt_list.append("无效命令，请查看功能表")
     return txt_list
 
