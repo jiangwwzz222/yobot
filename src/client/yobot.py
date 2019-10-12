@@ -52,7 +52,7 @@ def yobot(*cmd_list):
                 txt_list.append("此功能已关闭")
                 return txt_list
             gacha = Gacha(cmd_list[:3])
-            gacha.gc(func)
+            gacha.gc(func, cmd)
             txt_list.extend(gacha.txt_list)
             return txt_list
         # jjc查询

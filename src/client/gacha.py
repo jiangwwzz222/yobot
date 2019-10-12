@@ -2,6 +2,7 @@
 import os
 import pickle
 import random
+import re
 import sqlite3
 import sys
 import time
@@ -149,10 +150,16 @@ class Gacha():
             os.remove(os.path.join(self.__path, "pool.json5"))
         self.txt_list.append("卡池已重置")
 
-    def show_colle(self):
+    def show_colle(self, cmd=None):
         if not os.path.exists(os.path.join(self.__path, "collections.db")):
             self.txt_list.append("没有仓库")
             return 1
+        # qq_list = [self.__qqid]
+        # if cmd != None:
+        #     pattern = r"(?<=\[CQ:at,qq=)\d+(?=\])"
+        #     moreqq_list = re.findall(pattern, cmd)
+        #     qq_list.extend([int(x) for x in moreqq_list])
+        #     暂时做不了，等到3.0出来再做
         db_conn = sqlite3.connect(os.path.join(self.__path, "collections.db"))
         db = db_conn.cursor()
         sql_info = list(db.execute(
@@ -216,18 +223,18 @@ class Gacha():
             return 2
         elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
             return 3
-        elif cmd == "仓库":
+        elif cmd.startwith("仓库"):
             return 4
         else:
             return 0
 
-    def gc(self, func_num):
+    def gc(self, func_num, cmd=None):
         if func_num == 2:
             self.setting()
         elif func_num == 3:
             self.del_pool()
         elif func_num == 4:
-            self.show_colle()
+            self.show_colle(cmd)
         elif self.load() == 0:
             if func_num == 1:
                 self.gacha()
