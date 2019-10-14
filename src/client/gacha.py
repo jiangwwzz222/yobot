@@ -154,12 +154,10 @@ class Gacha():
         if not os.path.exists(os.path.join(self.__path, "collections.db")):
             self.txt_list.append("没有仓库")
             return 1
-        # qq_list = [self.__qqid]
-        # if cmd != None:
-        #     pattern = r"(?<=\[CQ:at,qq=)\d+(?=\])"
-        #     moreqq_list = re.findall(pattern, cmd)
-        #     qq_list.extend([int(x) for x in moreqq_list])
-        #     暂时做不了，等到3.0出来再做
+        moreqq_list = []
+        if cmd != None:
+            pattern = r"(?<=\[CQ:at,qq=)\d+(?=\])"
+            moreqq_list = [int(x) for x in re.findall(pattern, cmd)]
         db_conn = sqlite3.connect(os.path.join(self.__path, "collections.db"))
         db = db_conn.cursor()
         sql_info = list(db.execute(
@@ -169,18 +167,39 @@ class Gacha():
             db_conn.close()
             return 2
         colle = pickle.loads(sql_info[0][0])
+        more_colle = []
+        for other_qq in moreqq_list:
+            sql_info = list(db.execute(
+                "SELECT colle FROM Colle WHERE qqid=?", (other_qq,)))
+            if len(sql_info) != 1:
+                self.txt_list.append("[CQ:at,qq={}]的仓库为空".format(other_qq))
+                db_conn.close()
+                return 2
+            more_colle.append(pickle.loads(sql_info[0][0]))
         if not os.path.exists(os.path.join(self.__path, "temp")):
             os.mkdir(os.path.join(self.__path, "temp"))
         colle_file = os.path.join(
             self.__path, "temp",
             str(self.__qqid)+time.strftime("_%Y%m%d_%H%M%S", time.localtime())+".csv")
+        showed_colle = set(colle)
+        for item in more_colle:
+            showed_colle = showed_colle.union(item)
         with open(colle_file, "w", encoding="utf-8-sig") as f:
-            def d_line(d):
-                for k, v in zip(d.keys(), d.values()):
-                    yield str(k)+","+str(v)+"\n"
-            f.write("角色,数量\n")
-            sorted_lines = sorted(d_line(colle))
-            f.writelines(sorted_lines)
+            f.write("角色,"+self.__nickname)
+            for memb in moreqq_list:
+                f.write(",")
+                # 使用老李api
+                res = requests.get("http://laoliapi.cn/king/qq.php?qq=" + str(memb))
+                if res.status_code == 200:
+                    f.write(json5.loads(res.text).get("name", str(memb)))
+                else:
+                    f.write(str(memb))
+            f.write("\n")
+            for char in sorted(showed_colle):
+                f.write(char + "," + str(colle.get(char, 0)))
+                for item in more_colle:
+                    f.write("," + str(item.get(char, 0)))
+                f.write("\n")
         f = open(colle_file, 'rb')
         files = {'file': f}
         response = requests.post(
