@@ -179,7 +179,8 @@ class Gacha():
                 for k, v in zip(d.keys(), d.values()):
                     yield str(k)+","+str(v)+"\n"
             f.write("角色,数量\n")
-            f.writelines(d_line(colle))
+            sorted_lines = sorted(d_line(colle))
+            f.writelines(sorted_lines)
         f = open(colle_file, 'rb')
         files = {'file': f}
         response = requests.post(
