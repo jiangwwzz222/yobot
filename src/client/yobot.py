@@ -29,16 +29,16 @@ class Yobot:
                 self.glo_setting = json.load(config_file)
             except:
                 raise File_error(config_f_path + " been damaged")
-        self.glo_setting["dirname"]
+        self.glo_setting["dirname"] = dirname
 
         # todo:先写上，等全部改好再回来改参数
-        self.check = check_ver.Check()
-        self.record = dmg_record.Record()
-        self.gach = gacha.Gacha()
-        self.jjc = jjc_consult.Consult()
-        self.lok = lock_boss.Lock()
-        self.res = reserve.Reserve()
-        self.msg = yobot_msg.Message()
+        self.check = check_ver.Check(self.glo_setting)
+        self.msg = yobot_msg.Message(self.glo_setting)
+        self.gach = gacha.Gacha(self.glo_setting)
+        self.jjc = jjc_consult.Consult(self.glo_setting)
+        self.lok = lock_boss.Lock(self.glo_setting)
+        self.record = dmg_record.Record(self.glo_setting)
+        self.res = reserve.Reserve(self.glo_setting)
 
     def __del__(self):
         pass
