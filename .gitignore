@@ -1,4 +1,5 @@
 /src/client/*/
+!/src/client/plugins/
 /src/client/*.json
 /src/client/*.csv
 /src/client/*.db

@@ -38,22 +38,26 @@ class Switcher:
             f = 0
         return f
 
-    def sw(self, match_num: int = 0, cmd: str) -> str:
+    def excute(self, match_num: int = 0, cmd: str) -> dict:
         if match_num == 0x300:
-            return self.setting_url + "\n请在此页进行设置，完成后发送设置码即可\n"
+            reply = self.setting_url + "\n请在此页进行设置，完成后发送设置码即可"
         elif match_num == 0x400:
             in_code = cmd[2:]
             try:
                 de_code = base64.b64decode(in_code)
             except:
-                return "设置码解码错误，请检查\n"
+                reply = "设置码解码错误，请检查"
             # todo: ...
-        if match_num == 0x100 or match_num == 0x200:
+        elif match_num == 0x100 or match_num == 0x200:
             if cmd in self.switchers:
                 func = self.switchers[cmd]
                 sw = (match_num == 0x100)
                 self.switch(func, sw)
-                return (func + ("已打开\n" if sw else "已关闭\n"))
+                reply = func + ("已打开\n" if sw else "已关闭")
             else:
-                return("没有此功能的开关，目前允许使用开关的功能有：" +
-                       "、".join(self.switchers) + "\n")
+                reply = "没有此功能的开关，目前允许使用开关的功能有：" + \
+                    "、".join(self.switchers)
+        return {
+            "reply": reply
+            "block": True
+        }
