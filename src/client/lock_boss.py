@@ -1,4 +1,7 @@
 # coding=utf-8
+
+# todo:这个文件还没有为3.0修改过
+
 import json
 import os.path
 import sys
