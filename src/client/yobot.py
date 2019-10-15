@@ -33,6 +33,7 @@ class Yobot:
 
         # todo:先写上，等全部改好再回来改参数
         self.check = check_ver.Check(self.glo_setting)
+        self.switch = switcher.Switcher(self.glo_setting)
         self.msg = yobot_msg.Message(self.glo_setting)
         self.gach = gacha.Gacha(self.glo_setting)
         self.jjc = jjc_consult.Consult(self.glo_setting)

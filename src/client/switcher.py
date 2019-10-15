@@ -1,51 +1,59 @@
 # coding=utf-8
 
-# todo:这个文件还没有为3.0修改过
-
-
+import base64
 import json
 import os
 import sys
+from typing import Union
 
 
 class Switcher:
-    func_list = ["抽卡", "jjc查询", "无效命令提示"]
-    data = {}
+    setting_url = "http://io.yobot.xyz/v3/setting"
+    setting_refer_url "https://yobot.xyz/setting-help"
+    switchers = {
+        "抽卡": "gacha",
+        "jjc查询": "jjc_consult",
+        "无效命令提示": "invalidity_notify"}
 
-    def __init__(self):
-        self.path = os.path.join(os.path.dirname(sys.argv[0]), "switcher.json")
-        self.txt_list = []
-        if os.path.exists(self.path):
-            with open(self.path, "r", encoding="utf-8") as f:
-                self.data = json.load(f)
-        else:
-            self.data = {}
+    def __init__(self, glo_setting: dict):
+        self.setting = glo_setting
 
-    def switch(self, func, sw):
-        self.data[func] = sw
-        with open(self.path, "w", encoding="utf-8") as f:
-            json.dump(self.data, f, indent=2, ensure_ascii=False)
+    def switch(self, func: str, sw: Union[bool, int, float, str]) -> None:
+        self.setting[func] = sw
+        config_path = os.path.join(
+            self.setting["dirname"], "yobot_config.json")
+        with open(config_path, "w", encoding="utf-8") as f:
+            json.dump(self.setting, f, indent=2, ensure_ascii=False)
 
-    def match(self, cmd):
+    def match(self, cmd: str) -> int:
         if cmd.startswith("打开"):
             f = 0x100
         elif cmd.startswith("关闭"):
             f = 0x200
+        elif cmd == "设置":
+            f = 0x300
+        elif cmd.startswith("设置"):
+            f = 0x400
         else:
             f = 0
-        if f != 0:
-            if cmd[2:] in self.func_list:
-                f += self.func_list.index(cmd[2:])
-            else:
-                f = 1
         return f
 
-    def sw(self, match_num):
-        if match_num == 1:
-            self.txt_list.append("没有此功能的开关，目前允许使用开关的功能有：" +
-                                 "、".join(self.func_list))
-            return
-        func = self.func_list[match_num & 0xff]
-        sw = (match_num & 0xf00 == 0x100)
-        self.switch(func, sw)
-        self.txt_list.append(func + "功能已" + ("打开" if sw else "关闭"))
+    def sw(self, match_num: int = 0, cmd: str) -> str:
+        if match_num == 0x300:
+            return self.setting_url + "\n请在此页进行设置，完成后发送设置码即可\n"
+        elif match_num == 0x400:
+            in_code = cmd[2:]
+            try:
+                de_code = base64.b64decode(in_code)
+            except:
+                return "设置码解码错误，请检查\n"
+            # todo: ...
+        if match_num == 0x100 or match_num == 0x200:
+            if cmd in self.switchers:
+                func = self.switchers[cmd]
+                sw = (match_num == 0x100)
+                self.switch(func, sw)
+                return (func + ("已打开\n" if sw else "已关闭\n"))
+            else:
+                return("没有此功能的开关，目前允许使用开关的功能有：" +
+                       "、".join(self.switchers) + "\n")
