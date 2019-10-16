@@ -8,7 +8,7 @@ from typing import Any
 
 class Message:
     def __init__(self, glo_setting: dict):
-        self.setting = glo_setting
+        self.version = glo_setting["version"]["ver_name"]
 
     @staticmethod
     def match(cmd: str) -> int:
@@ -33,7 +33,7 @@ class Message:
 
     def excute(self, match_num: int = 0, msg: dcit) -> dict:
         if match_num == 99:
-            return self.setting["version"]
+            return self.version
         elif match_num == 98:
             return "请查看https://yobot.xyz/functions_2/"
         else:

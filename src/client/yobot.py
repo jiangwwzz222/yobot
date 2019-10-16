@@ -33,12 +33,13 @@ class Yobot:
 
         inner_info = {
             "dirname": dirname,
-            "version": "3.0.0 beta0"}
+            "version": {
+                "ver_name": "3.0.0_alpha_b1",
+                "ver_id": 2906
+                "check_url": "https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json"}}
         self.glo_setting.update(inner_info)
 
         self.plugins = []
-
-        # todo:先写上，等全部改好再回来改参数
         self.plugins.append(check_ver.Check(self.glo_setting))
         self.plugins.append(switcher.Switcher(self.glo_setting))
         self.plugins.append(yobot_msg.Message(self.glo_setting))
