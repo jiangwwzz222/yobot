@@ -43,8 +43,9 @@ class Switcher:
         cmd = msg["raw_message"]
         if match_num == 0x300:
             reply = self.setting_url + "\n请在此页进行设置，完成后发送设置码即可"
-            # post to shorten url
+            # # post to shorten url
             # {
+            #     'signature': 'b7b55a841d',
             #     'action': 'shorturl',
             #     'url': 'http://io.yobot.monster/go/yourls-api.php',
             #     'format': 'json'
