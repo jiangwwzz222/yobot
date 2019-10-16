@@ -30,7 +30,11 @@ class Yobot:
                 self.glo_setting = json.load(config_file)
             except:
                 raise File_error(config_f_path + " been damaged")
-        self.glo_setting["dirname"] = dirname
+
+        inner_info = {
+            "dirname": dirname,
+            "version": "3.0.0 beta0"}
+        self.glo_setting.update(inner_info)
 
         self.plugins = []
 
