@@ -38,7 +38,8 @@ class Switcher:
             f = 0
         return f
 
-    def excute(self, match_num: int = 0, cmd: str) -> dict:
+    def excute(self, match_num: int = 0, msg: dcit) -> dict:
+        cmd = msg["raw_message"]
         if match_num == 0x300:
             reply = self.setting_url + "\n请在此页进行设置，完成后发送设置码即可"
         elif match_num == 0x400:

@@ -2,6 +2,7 @@
 import json
 import os
 import sys
+from typing import List
 
 import check_ver
 import dmg_record
@@ -43,5 +44,13 @@ class Yobot:
         self.plugins.append(dmg_record.Record(self.glo_setting))
         self.plugins.append(reserve.Reserve(self.glo_setting))
 
-    def __del__(self):
-        pass
+    def proc(self, msg: dict) -> List[str]:
+        replys = []
+        for pitem in self.plugins:
+            func_num = pitem.match(msg["raw_message"])
+            if func_num:
+                res = pitem.excute(func_num, msg)
+                replys.append(res["reply"])
+                if res["block"]:
+                    break
+        return replys
