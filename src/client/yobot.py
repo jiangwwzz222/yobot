@@ -12,11 +12,7 @@ import lock_boss
 import reserve
 import switcher
 import yobot_msg
-
-
-class File_error(IOError):
-    def __init__(self, s="file error"):
-        self.error_filename = s
+from plugins.yobot_errors import File_error
 
 
 class Yobot:
