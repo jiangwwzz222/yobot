@@ -10,7 +10,7 @@ import requests
 
 class Setting:
     URL = {
-        'shorten', 'http://io.yobot.monster/go/yourls-api.php'
+        'shorten': 'http://io.yobot.monster/go/yourls-api.php',
         'mail': 'http://io.yobot.monster/v2/mail-conf/?qq='}
 
     def __init__(self, glo_setting: dict):
@@ -25,7 +25,7 @@ class Setting:
             return 0
 
     # def excute(self, match_num: int, msg: dcit) -> dict:
-    def excute(self, match_num: int, msg: dcit) -> dict:
+    def excute(self, match_num: int, msg: dict) -> dict:
         cmd = msg['raw_message'][2:]
         qqid = msg['sender']['user_id']
         if cmd == '邮箱':
@@ -46,12 +46,12 @@ class Setting:
             while cmd.startswith('='):
                 cmd = cmd[1:]+'='
             try:
-                raw = base64.b64decode(cmd).decode()
-                confirm = raw[:32]
+                raw = base64.b64decode(cmd)
+                confirm = raw[:32].decode()
                 data = raw[32:]
                 md5 = hashlib.md5(data)
                 assert confirm == md5.hexdigest()
-                config = json.loads(data)
+                config = json.loads(data.decode())
             except:
                 return '设置码不完整，请检查'
             if config['q'] != qqid:
