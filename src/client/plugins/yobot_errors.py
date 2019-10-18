@@ -19,3 +19,11 @@ class Coding_error(IOError):
     def __init__(self, s="coding error"):
         super().__init__(self)
         self.error_msg = s
+
+class Input_error(ValueError):
+    def __init__(self, s="input error"):
+        super().__init__(self)
+        self.error_msg = s
+
+    def __str__(self):
+        return self.error_msg
