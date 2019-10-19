@@ -90,7 +90,9 @@ class Gacha:
             info = {}
             times, last_day, day_times = 0, "", 0
         try:
-            day_limit = self.__pool["settings"]["每日抽卡次数"]
+            day_limit = self.__pool["settings"].get("每日抽卡次数", None)
+            if day_limit is None:
+                day_limit = self.__pool["settings"]["times"]
         except KeyError as ke:
             db_conn.close()
             raise Coding_error("卡池信息错误，未设置{}".format(ke))
@@ -209,7 +211,9 @@ class Gacha:
         # todo:查数据库得到昵称
 
     def check_ver(self) -> Union[str, None]:
-        auto_update = self.__pool.get("settings", {}).get("联网更新卡池", False)
+        auto_update = self.__pool.get("settings", {}).get("联网更新卡池", None)
+        if auto_update is None:
+            auto_update = self.__pool.get("settings", {}).get("upgrade", False)
         if not auto_update:
             return
         # f = open(os.path.join(self.setting["dirname"], "version.json"),
