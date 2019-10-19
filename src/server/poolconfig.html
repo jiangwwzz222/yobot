@@ -59,8 +59,8 @@
             let jsn = (JSON.stringify({
                 pool: ss,
                 settings: {
-                    每日抽卡次数: parseInt($("form#cfg input#times").val()),
-                    联网更新卡池: $("form#cfg input#update").is(':checked')
+                    times: parseInt($("form#cfg input#times").val()),
+                    update: $("form#cfg input#update").is(':checked')
                 }
             }));
             jsn = btoa(toUtf8(jsn));
