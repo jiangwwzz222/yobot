@@ -1,6 +1,6 @@
 # coding=utf-8
 
-# todo:这个文件还没有为3.0修改过
+# 祖传代码，写得稀烂，不想改了
 
 import csv
 import json
