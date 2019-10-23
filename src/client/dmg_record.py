@@ -438,7 +438,7 @@ class Record():
             return 8
         elif cmd == "选择台服" or cmd == "切换台服":
             return 9
-        elif cmd == "切换国服"or cmd == "切换国服":
+        elif cmd == "选择国服" or cmd == "切换国服":
             return 91
         elif cmd.startswith("重新开始"):
             return 10
