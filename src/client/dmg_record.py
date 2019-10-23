@@ -131,10 +131,10 @@ class Record():
                     cmd,
                     self.__comment))
 
-    def __damage(self, cmd, comment = None):
+    def __damage(self, cmd, comment=None):
         dmg = self._cmdtoint(cmd)
         if dmg == None:
-            return        
+            return
         remain = self.__conf[self.__groupid]["remain"]
         if(dmg >= remain):
             self.__comment += "未记录"
@@ -179,7 +179,7 @@ class Record():
             self.__comment += "已记录"
             self._boss_status()
 
-    def __eliminate(self, comment = None):
+    def __eliminate(self, comment=None):
         if not (self.__qqid in self.__data[1].keys()):
             self.__creat_mem()
             if self.__qqid == "unknown":
@@ -438,6 +438,8 @@ class Record():
             return 8
         elif cmd == "选择台服" or cmd == "切换台服":
             return 9
+        elif cmd == "切换国服"or cmd == "切换国服":
+            return 91
         elif cmd.startswith("重新开始"):
             return 10
         elif cmd.startswith("订阅邮件") or cmd.startswith("增加邮箱") or cmd.startswith("添加邮箱"):
@@ -473,7 +475,7 @@ class Record():
                 self.__save()
                 self._boss_status()
                 self.__comment += "已成功选择"
-            elif cmd == "选择台服":
+            elif cmd == "选择台服" or cmd == "选择国服":
                 self.__conf[self.__groupid]["area"] = "tw"
                 self.__conf[self.__groupid]["remain"] = self.Boss_health["tw"][0]
                 self.__save()
@@ -481,7 +483,7 @@ class Record():
                 self.__comment += "已成功选择"
             else:
                 self.txt_list.append(
-                    "由于日服、台服boss血量不同、每日重置时间不同，请发送“#选择日服”或“#选择台服”")
+                    "由于日服、台服、国服boss血量不同、每日重置时间不同，请发送“#选择日服”或“#选择台服”或“#选择国服”")
                 self.__comment += "未选择"
         elif func_num == 2:
             self.__damage(cmd, comment)
@@ -515,10 +517,11 @@ class Record():
             self.__save()
             self.txt_list.append("已切换为日服")
             self.__comment += "已切换"
-        elif func_num == 9:
+        elif func_num == 9 or func_num == 91:
             self.__conf[self.__groupid]["area"] = "tw"
             self.__save()
-            self.txt_list.append("已切换为台服")
+            self.txt_list.append(
+                "已切换为台服" if func_num == 9 else "已切换为国服")
             self.__comment += "已切换"
         elif func_num == 10:
             self.__show_status = False
