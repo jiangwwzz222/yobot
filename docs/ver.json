@@ -1,6 +1,6 @@
 {
-    "version": 2403,
-    "vername": "yobot[v2.4.3]",
-    "url": "http://api.v3.yobot.xyz:32222/download/yobot2403b.zip",
+    "version": 2404,
+    "vername": "yobot[v2.4.4]",
+    "url": "http://api.v3.yobot.xyz:32222/download/yobot2404.zip",
     "requiredUpdate": false
 }
