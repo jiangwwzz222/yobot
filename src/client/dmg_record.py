@@ -241,10 +241,10 @@ class Record():
                     self.__conf[self.__groupid]["boss"] = opt[4]
                     self.__conf[self.__groupid]["remain"] = opt[5]
                 if (opt[6] == 2 or opt[6] == 3):  # 余刀
-                    self.__data[1][self.__qqid][1] = 2  # 上一刀为尾刀
+                    self.__data[1][opt[2]][1] = 2  # 上一刀为尾刀
                 else:  # 非余刀
-                    self.__data[1][self.__qqid][1] = 0  # 上一刀非尾刀
-                    self.__data[1][self.__qqid][3] -= 1  # 本日刀数-1
+                    self.__data[1][opt[2]][1] = 0  # 上一刀非尾刀
+                    self.__data[1][opt[2]][3] -= 1  # 本日刀数-1
                 self.__save()
                 self.__comment += "已撤销"
                 self.txt_list.append("{}在{}对{}周目{}号boss造成的{:,}伤害已撤销".format(
