@@ -18,8 +18,15 @@ class Record():
     """
 
     Boss_health = {
-        "jp": [6000000, 8000000, 10000000, 12000000, 15000000],
-        "tw": [6000000, 8000000, 10000000, 12000000, 20000000]}
+        "jp": [
+            [6000000, 8000000, 10000000, 12000000, 15000000],
+            [6000000, 8000000, 10000000, 12000000, 15000000],
+            [7000000, 8000000, 12000000, 14000000, 17000000]
+        ],
+        "tw": [
+            [6000000, 8000000, 10000000, 12000000, 20000000]
+        ]*3
+    }
     txt_list = []
 
     def __init__(self, baseinfo):
@@ -72,6 +79,14 @@ class Record():
 
     def __del__(self):
         pass
+
+    def __lap2stage(self, lap):
+        if lap <= 3:
+            return 0
+        elif lap <= 10:
+            return 1
+        else:
+            return 2
 
     def _boss_status(self):
         self.txt_list.append("现在{}周目，{}号boss，剩余血量{:,}".format(
@@ -220,9 +235,10 @@ class Record():
         else:
             self.__conf[self.__groupid]["boss"] = \
                 self.__conf[self.__groupid]["boss"]+1
-        self.__conf[self.__groupid]["remain"] = \
-            self.Boss_health[self.__conf[self.__groupid]["area"]
-                             ][self.__conf[self.__groupid]["boss"]-1]
+        self.__conf[self.__groupid]["remain"] = (
+            self.Boss_health[self.__conf[self.__groupid]["area"]]
+            [self.__lap2stage(self.__conf[self.__groupid]["lap"])]
+            [self.__conf[self.__groupid]["boss"]-1])
         self.__save()
         self.__comment += "已记录"
         self._boss_status()
@@ -273,7 +289,9 @@ class Record():
         else:
             b = self._cmdtoint(match.group(2))
             if match.group(1) in ["血量", "生命", "生命值", "体力"]:
-                if b >= 1 and b <= self.Boss_health[self.__conf[self.__groupid]["area"]][self.__conf[self.__groupid]["boss"]-1]:
+                if b >= 1 and b <= (self.Boss_health[self.__conf[self.__groupid]["area"]]
+                                    [self.__lap2stage(self.__conf[self.__groupid]["lap"])]
+                                    [self.__conf[self.__groupid]["boss"]-1]):
                     self.__data[0].append([
                         False,
                         int(time.time()),
@@ -299,9 +317,10 @@ class Record():
                         self.__conf[self.__groupid]["boss"],
                         self.__conf[self.__groupid]["remain"]])
                     self.__conf[self.__groupid]["boss"] = b
-                    self.__conf[self.__groupid]["remain"] = \
-                        self.Boss_health[self.__conf[self.__groupid]
-                                         ["area"]][b-1]
+                    self.__conf[self.__groupid]["remain"] = (
+                        self.Boss_health[self.__conf[self.__groupid]["area"]]
+                        [self.__lap2stage(self.__conf[self.__groupid]["lap"])]
+                        [b-1])
                     self.__save()
                     self.__comment += "已修正"
                     self.txt_list.append("boss状态已更新")
@@ -471,13 +490,13 @@ class Record():
         if not os.path.exists(os.path.join(self.__path, "data", self.__groupid+".dat")):
             if cmd == "选择日服":
                 self.__conf[self.__groupid]["area"] = "jp"
-                self.__conf[self.__groupid]["remain"] = self.Boss_health["jp"][0]
+                self.__conf[self.__groupid]["remain"] = self.Boss_health["jp"][0][0]
                 self.__save()
                 self._boss_status()
                 self.__comment += "已成功选择"
             elif cmd == "选择台服" or cmd == "选择国服":
                 self.__conf[self.__groupid]["area"] = "tw"
-                self.__conf[self.__groupid]["remain"] = self.Boss_health["tw"][0]
+                self.__conf[self.__groupid]["remain"] = self.Boss_health["tw"][0][0]
                 self.__save()
                 self._boss_status()
                 self.__comment += "已成功选择"
