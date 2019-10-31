@@ -35,6 +35,6 @@ class Message:
         if match_num == 99:
             return self.version
         elif match_num == 98:
-            return "请查看https://yobot.xyz/functions_2/"
+            return "请查看http://h.yobot.monster/"
         else:
-            return "此功能已经不再可用，请查看https://yobot.xyz/functions_2/"
+            return "此功能已经不再可用，请查看http://h.yobot.monster/"
