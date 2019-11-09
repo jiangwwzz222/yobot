@@ -4,7 +4,7 @@ import os
 import sys
 from typing import List
 
-import plugins
+import plugins as pls
 
 
 class Yobot:
@@ -30,14 +30,14 @@ class Yobot:
         self.glo_setting.update(inner_info)
 
         self.plugins = []
-        self.plugins.append(check_ver.Check(self.glo_setting))
-        self.plugins.append(switcher.Switcher(self.glo_setting))
-        self.plugins.append(yobot_msg.Message(self.glo_setting))
-        self.plugins.append(gacha.Gacha(self.glo_setting))
-        self.plugins.append(jjc_consult.Consult(self.glo_setting))
-        self.plugins.append(lock_boss.Lock(self.glo_setting))
-        self.plugins.append(dmg_record.Record(self.glo_setting))
-        self.plugins.append(reserve.Reserve(self.glo_setting))
+        self.plugins.append(pls.check_ver.Check(self.glo_setting))
+        self.plugins.append(pls.switcher.Switcher(self.glo_setting))
+        self.plugins.append(pls.yobot_msg.Message(self.glo_setting))
+        self.plugins.append(pls.gacha.Gacha(self.glo_setting))
+        self.plugins.append(pls.jjc_consult.Consult(self.glo_setting))
+        self.plugins.append(pls.lock_boss.Lock(self.glo_setting))
+        self.plugins.append(pls.dmg_record.Record(self.glo_setting))
+        self.plugins.append(pls.reserve.Reserve(self.glo_setting))
 
     def proc(self, msg: dict) -> List[str]:
         replys = []
