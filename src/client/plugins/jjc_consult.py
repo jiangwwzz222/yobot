@@ -89,7 +89,7 @@ class Consult:
             return 0
 
     def excute(self, match_num: int, msg: dict) -> dict:
-        if self.setting["jjc_consult"] == False:
+        if self.setting.get("jjc_consult",True) == False:
             reply = "此功能未启用"
         else:
             anlz = self.user_input(msg["raw_message"][5:])

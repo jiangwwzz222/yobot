@@ -505,9 +505,9 @@ class Record():
                 self.__damage(cmd, comment)
             elif (cmd == "尾刀" or cmd == "收尾" or cmd == "收掉" or cmd == "击败"):
                 self.__eliminate(comment)
-            else:
-                self.__comment += "参数错误"
-                self.txt_list.append("300参数错误")
+            # else:
+            #     self.__comment += "参数错误"
+            #     self.txt_list.append("300参数错误")
         elif func_num == 5:
             self.__undo()
         elif func_num == 6:
