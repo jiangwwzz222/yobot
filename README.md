@@ -1,5 +1,5 @@
 # yobot
-`ver 2.4.9`
+`ver 3.0 alpha b1`
 
 chatting bot for pcr(mobile game)
 
