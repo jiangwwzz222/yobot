@@ -421,9 +421,9 @@ class Record():
         匹配命令，返回触发功能的序号
         """
         cmd = incmd.replace(" ", "")
-        if cmd.startswith("报刀"):  # 历史遗留问题
-            cmd = cmd[2:]
-        if re.match(r"\d+[wWkK万]?$", cmd):
+        # if cmd.startswith("报刀"):  # 历史遗留问题
+        #     cmd = cmd[2:]
+        if re.match(r"(报刀|#)\d+[wWkK万]?$", cmd):
             return 2
         elif (cmd == "尾刀" or cmd == "收尾" or cmd == "收掉" or cmd == "击败"):
             return 3
@@ -465,8 +465,6 @@ class Record():
         实施命令
         """
         cmd = incmd.replace(" ", "")
-        if cmd.startswith("报刀"):  # 历史遗留问题
-            cmd = cmd[2:]
         if func_num == None:
             func_num = self.match(cmd)
         if not os.path.exists(os.path.join(self.__path, "data", self.__groupid+".dat")):
@@ -487,6 +485,10 @@ class Record():
                     "由于日服、台服boss血量不同、每日重置时间不同，请发送“#选择日服”或“#选择台服”")
                 self.__comment += "未选择"
         elif func_num == 2:
+            if cmd.startswith("报刀"):  # 历史遗留问题
+                cmd = cmd[2:]
+            if cmd.startswith("#"):  # 历史遗留问题
+                cmd = cmd[1:]
             self.__damage(cmd, comment)
         elif func_num == 3:
             self.__eliminate(comment)
