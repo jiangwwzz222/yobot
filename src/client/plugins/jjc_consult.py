@@ -9,7 +9,7 @@ import time
 
 import requests
 
-from yobot_errors import Server_error
+from plugins.yobot_errors import Server_error
 
 
 class Consult:
@@ -54,7 +54,7 @@ class Consult:
         data = requests.get("http://api.yobot.xyz/jjc_search?def=" + query)
         res = json.loads(data.text)
         if(res["code"] == 0):
-            reply += "从pcrdfans.com找到{}条记录\n".format(
+            reply += "从pcrdfans com找到{}条记录\n".format(
                 len(res["data"]["result"]))
             line = "\n=======\n"
             for result in res["data"]["result"]:
@@ -88,16 +88,16 @@ class Consult:
         else:
             return 0
 
-    def excute(self, match_num: int = 0, msg: dcit) -> dict:
+    def excute(self, match_num: int, msg: dict) -> dict:
         if self.setting["jjc_consult"] == False:
             reply = "此功能未启用"
         else:
-            anlz = user_input(msg["raw_message"][5:])
+            anlz = self.user_input(msg["raw_message"][5:])
             if anlz["code"] == 0:
                 reply = self.jjcsearch(anlz["def_lst"])
             else:
                 reply = anlz["msg"]
         return {
-            "reply": reply
+            "reply": reply,
             "block": True
         }

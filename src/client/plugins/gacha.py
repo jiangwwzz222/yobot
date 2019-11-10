@@ -13,7 +13,7 @@ from typing import List, Union
 import json5
 import requests
 
-from yobot_errors import Coding_error, Server_error
+from plugins.yobot_errors import Coding_error, Server_error
 
 
 class Gacha:
@@ -22,7 +22,7 @@ class Gacha:
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
         self.pool_file_path = os.path.join(
-            self.setting["dirname"], "pool.json5")
+            self.setting["dirname"], "pool.json")
         self.pool_checktime = 0
         self.status = self.load()
 
@@ -123,10 +123,10 @@ class Gacha:
         sql_info = pickle.dumps(info)
         if mem_exists:
             db.execute("UPDATE Colle SET colle=?, times=?, last_day=?, day_times=? WHERE qqid=?",
-                       (sql_info, times, last_day, day_times, self.__qqid))
+                       (sql_info, times, last_day, day_times, qqid))
         else:
             db.execute("INSERT INTO Colle (qqid,colle,times,last_day,day_times) VALUES(?,?,?,?,?)",
-                       (self.__qqid, sql_info, times, last_day, day_times))
+                       (qqid, sql_info, times, last_day, day_times))
         db_conn.commit()
         db_conn.close()
         return reply
@@ -150,7 +150,7 @@ class Gacha:
     #         os.remove(self.pool_file_path)
     #     self.txt_list.append("卡池已重置")
 
-    def show_colle(self, cmd: Union[None, str] = None) -> str:
+    def show_colle(self, qqid, nickname, cmd: Union[None, str] = None) -> str:
         if not os.path.exists(os.path.join(self.setting["dirname"], "collections.db")):
             return "没有仓库"
         moreqq_list = []
@@ -161,10 +161,10 @@ class Gacha:
             self.setting["dirname"], "collections.db"))
         db = db_conn.cursor()
         sql_info = list(db.execute(
-            "SELECT colle FROM Colle WHERE qqid=?", (self.__qqid,)))
+            "SELECT colle FROM Colle WHERE qqid=?", (qqid,)))
         if len(sql_info) != 1:
             db_conn.close()
-            return "you//" + "的仓库为空"
+            return nickname + "的仓库为空"
         colle = pickle.loads(sql_info[0][0])
         more_colle = []
         for other_qq in moreqq_list:
@@ -178,12 +178,12 @@ class Gacha:
             os.mkdir(os.path.join(self.setting["dirname"], "temp"))
         colle_file = os.path.join(
             self.setting["dirname"], "temp",
-            str(self.__qqid)+time.strftime("_%Y%m%d_%H%M%S", time.localtime())+".csv")
+            str(qqid)+time.strftime("_%Y%m%d_%H%M%S", time.localtime())+".csv")
         showed_colle = set(colle)
         for item in more_colle:
             showed_colle = showed_colle.union(item)
         with open(colle_file, "w", encoding="utf-8-sig") as f:
-            f.write("角色,"+"you//")
+            f.write("角色,"+nickname)
             for memb in moreqq_list:
                 f.write(",")
                 # 使用老李api
@@ -205,9 +205,9 @@ class Gacha:
             'http://api.yobot.xyz/v2/reports/', files=files)
         f.close()
         p = response.text
-        self.txt_list.append("you//" + "的仓库：" + p)
+        reply = (nickname + "的仓库：" + p)
         db_conn.close()
-        return 0
+        return reply
         # todo:查数据库得到昵称
 
     def check_ver(self) -> Union[str, None]:
@@ -240,22 +240,30 @@ class Gacha:
     def match(cmd: str) -> int:
         if cmd == "十连" or cmd == "十连抽":
             return 1
-        elif cmd == "十连设置" or cmd == "抽卡设置" or cmd == "卡池设置":
-            return 2
-        elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
-            return 3
+        # elif cmd == "十连设置" or cmd == "抽卡设置" or cmd == "卡池设置":
+        #     return 2
+        # elif cmd == "重置卡池" or cmd == "删除卡池" or cmd == "更新卡池":
+        #     return 3
         elif cmd.startswith("仓库"):
             return 4
         else:
             return 0
 
-    def execute(self, func_num: int = 0, msg: dict):
-        if func_num == 2:
-            self.setting()
-        elif func_num == 3:
-            self.del_pool()
+    def excute(self, func_num: int, msg: dict):
+        # if func_num == 2:
+        #     self.setting()
+        # elif func_num == 3:
+        #     self.del_pool()
+        if func_num == 1:
+            reply = self.gacha(
+                qqid=msg["sender"]["user_id"],
+                nickname=msg["sender"]["nickname"])
         elif func_num == 4:
-            self.show_colle(cmd)
-        elif self.load() == 0:
-            if func_num == 1:
-                self.gacha()
+            reply = self.show_colle(
+                qqid=msg["sender"]["user_id"],
+                nickname=msg["sender"]["nickname"],
+                cmd=msg["raw_message"][2:])
+        return {
+            "reply": reply,
+            "block": True
+        }

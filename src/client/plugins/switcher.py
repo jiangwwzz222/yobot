@@ -9,7 +9,7 @@ from typing import Union
 
 class Switcher:
     setting_url = "http://io.yobot.xyz/v3/setting"
-    setting_refer_url "https://yobot.xyz/setting-help"
+    setting_refer_url = "https://yobot.xyz/setting-help"
     switchers = {
         "抽卡": "gacha",
         "jjc查询": "jjc_consult",
@@ -39,7 +39,7 @@ class Switcher:
             f = 0
         return f
 
-    def excute(self, match_num: int = 0, msg: dcit) -> dict:
+    def excute(self, match_num: int, msg: dict) -> dict:
         cmd = msg["raw_message"]
         if match_num == 0x300:
             reply = self.setting_url + "\n请在此页进行设置，完成后发送设置码即可"
@@ -67,6 +67,6 @@ class Switcher:
                 reply = "没有此功能的开关，目前允许使用开关的功能有：" + \
                     "、".join(self.switchers)
         return {
-            "reply": reply
+            "reply": reply,
             "block": True
         }

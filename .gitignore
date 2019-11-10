@@ -1,5 +1,7 @@
 /src/client/*/
 !/src/client/plugins/
+/src/client/plugins/__pycache__/
 /src/client/*.json
 /src/client/*.csv
 /src/client/*.db
+/src/client/test.py

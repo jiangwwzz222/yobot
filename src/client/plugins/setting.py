@@ -17,7 +17,7 @@ class Setting:
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
         self.mailfile = os.path.join(glo_setting["dirname"], "mailconf.json")
-        self.poolfile = os.path.join(glo_setting["dirname"], "pool.json5")
+        self.poolfile = os.path.join(glo_setting["dirname"], "pool.json")
 
     @staticmethod
     def match(cmd: str) -> int:

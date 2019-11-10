@@ -4,7 +4,7 @@ import os
 import sys
 from typing import List
 
-import plugins as pls
+from plugins import *
 
 
 class Yobot:
@@ -12,32 +12,30 @@ class Yobot:
         dirname = os.path.dirname(sys.argv[0])
         config_f_path = os.path.join(dirname, "yobot_config.json")
         if not os.path.exists(config_f_path):
-            raise plugins.yobot_errorsFile_error(
+            raise yobot_errors.File_error(
                 config_f_path + " not exists")
         with open(config_f_path, "r", encoding="utf-8") as config_file:
             try:
                 self.glo_setting = json.load(config_file)
             except:
-                raise plugins.yobot_errorsFile_error(
+                raise yobot_errors.File_error(
                     config_f_path + " been damaged")
 
         inner_info = {
             "dirname": dirname,
             "version": {
                 "ver_name": "3.0.0_alpha_b1",
-                "ver_id": 2906
+                "ver_id": 2906,
                 "check_url": "https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json"}}
         self.glo_setting.update(inner_info)
 
         self.plugins = []
-        self.plugins.append(pls.check_ver.Check(self.glo_setting))
-        self.plugins.append(pls.switcher.Switcher(self.glo_setting))
-        self.plugins.append(pls.yobot_msg.Message(self.glo_setting))
-        self.plugins.append(pls.gacha.Gacha(self.glo_setting))
-        self.plugins.append(pls.jjc_consult.Consult(self.glo_setting))
-        self.plugins.append(pls.lock_boss.Lock(self.glo_setting))
-        self.plugins.append(pls.dmg_record.Record(self.glo_setting))
-        self.plugins.append(pls.reserve.Reserve(self.glo_setting))
+        # self.plugins.append(check_ver.Check(self.glo_setting))
+        self.plugins.append(switcher.Switcher(self.glo_setting))
+        self.plugins.append(yobot_msg.Message(self.glo_setting))
+        self.plugins.append(gacha.Gacha(self.glo_setting))
+        self.plugins.append(jjc_consult.Consult(self.glo_setting))
+        self.plugins.append(boss_dmg.Boss_dmg(self.glo_setting))
 
     def proc(self, msg: dict) -> List[str]:
         replys = []

@@ -31,10 +31,14 @@ class Message:
         else:
             return 0
 
-    def excute(self, match_num: int = 0, msg: dcit) -> dict:
+    def excute(self, match_num: int, msg: dict) -> dict:
         if match_num == 99:
-            return self.version
+            reply = self.version
         elif match_num == 98:
-            return "请查看http://h.yobot.monster/"
+            reply = "请查看http://h.yobot.monster/"
         else:
-            return "此功能已经不再可用，请查看http://h.yobot.monster/"
+            reply = "此功能已经不再可用，请查看http://h.yobot.monster/"
+        return {
+            "reply": reply,
+            "block": True
+        }

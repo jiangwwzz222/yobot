@@ -12,7 +12,7 @@ import sqlite3
 import sys
 import time
 
-from dmg_report import Report
+from plugins.dmg_report import Report
 
 
 class Record():
