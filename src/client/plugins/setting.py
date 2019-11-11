@@ -26,7 +26,7 @@ class Setting:
         else:
             return 0
 
-    def excute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         cmd = msg['raw_message'][2:]
         qqid = msg['sender']['user_id']
         if cmd == '邮箱':

@@ -39,7 +39,7 @@ class Switcher:
             f = 0
         return f
 
-    def excute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         cmd = msg["raw_message"]
         if match_num == 0x300:
             reply = self.setting_url + "\n请在此页进行设置，完成后发送设置码即可"

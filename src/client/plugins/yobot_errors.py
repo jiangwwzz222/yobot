@@ -27,3 +27,11 @@ class Input_error(ValueError):
 
     def __str__(self):
         return self.error_msg
+
+class Exit(Exception):
+    def __init__(self, s="Exit"):
+        super().__init__(self)
+        self.error_msg = s
+
+    def __str__(self):
+        return self.error_msg

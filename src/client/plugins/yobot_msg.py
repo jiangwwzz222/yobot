@@ -31,7 +31,7 @@ class Message:
         else:
             return 0
 
-    def excute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         if match_num == 99:
             reply = self.version
         elif match_num == 98:

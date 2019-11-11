@@ -43,7 +43,7 @@ class Gacha:
                 try:
                     self.__pool = json5.load(f)
                 except:
-                    self.txt_list.append("卡池文件解析错误，请检查卡池文件语法，或者“#重置卡池”")
+                    self.txt_list.append("卡池文件解析错误，请检查卡池文件语法，或者“重置卡池”")
                     return False
         return True
 
@@ -249,7 +249,7 @@ class Gacha:
         else:
             return 0
 
-    def excute(self, func_num: int, msg: dict):
+    def execute(self, func_num: int, msg: dict):
         # if func_num == 2:
         #     self.setting()
         # elif func_num == 3:
@@ -257,11 +257,11 @@ class Gacha:
         if func_num == 1:
             reply = self.gacha(
                 qqid=msg["sender"]["user_id"],
-                nickname=msg["sender"]["nickname"])
+                nickname=msg["sender"]["card"])
         elif func_num == 4:
             reply = self.show_colle(
                 qqid=msg["sender"]["user_id"],
-                nickname=msg["sender"]["nickname"],
+                nickname=msg["sender"]["card"],
                 cmd=msg["raw_message"][2:])
         return {
             "reply": reply,

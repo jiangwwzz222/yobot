@@ -36,7 +36,7 @@ class Check():
         now = int(time.time())
         if ver["checktime"] == 1:  # 已经发现新版本
             f.close()
-            return "有新的版本可用，发送“#更新”唤起更新程序"
+            return "有新的版本可用，发送“更新”唤起更新程序"
         if ver["checktime"] == 2:  # 刚刚更新
             ver["checktime"] = 0
             f.seek(0)
@@ -60,7 +60,7 @@ class Check():
                 f.truncate()
                 json.dump(ver, f, indent=2)
                 f.close()
-                return "有新的版本可用，发送“#更新”唤起更新程序"
+                return "有新的版本可用，发送“更新”唤起更新程序"
             else:
                 ver["checktime"] = now + 80000  # 每8万秒检查一次
                 f.seek(0)

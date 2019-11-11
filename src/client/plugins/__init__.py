@@ -5,5 +5,6 @@ __all__ = [
     'gacha',
     'jjc_consult',
     'boss_dmg',
+    'updater',
     'yobot_errors'
 ]

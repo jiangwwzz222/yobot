@@ -88,7 +88,7 @@ class Consult:
         else:
             return 0
 
-    def excute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         if self.setting.get("jjc_consult",True) == False:
             reply = "此功能未启用"
         else:

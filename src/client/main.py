@@ -10,11 +10,17 @@ bot = yobot.Yobot()
 
 @conn.on_message()
 async def handle_msg(context):
-    r_list = bot.proc(context)
-    if r_list != []:
-        return {'reply': "\n".join(r_list),
+    reply = bot.proc(context)
+    if reply != "":
+        return {'reply': reply,
                 'at_sender': False}
     else:
-        return {}
+        return None
 
-conn.run(host='127.0.0.1', port=8080)
+try:
+    with open as target:
+        pass
+except:
+    port = 8080
+
+conn.run(host='127.0.0.1', port=port)

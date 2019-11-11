@@ -18,13 +18,14 @@ class Boss_dmg:
         func = reserve.Reserve.match(cmd)
         if func != 0:
             return func | 0x3000
+        return 0
 
-    def excute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         swit = match_num & 0xf000
         func = match_num & 0x0fff
         cmd_list = (str(msg["group_id"]),
                     str(msg["sender"]["user_id"]),
-                    msg["sender"]["nickname"])
+                    msg["sender"]["card"])
         cmd = msg["raw_message"]
         txt_list = []
         if swit == 0x1000:

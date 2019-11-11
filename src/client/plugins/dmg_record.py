@@ -141,7 +141,7 @@ class Record():
         remain = self.__conf[self.__groupid]["remain"]
         if(dmg >= remain):
             self.__comment += "未记录"
-            self.txt_list.append("报刀无效，伤害量必须小于剩余血量，如果击败boss请发送“#尾刀”")
+            self.txt_list.append("报刀无效，伤害量必须小于剩余血量，如果击败boss请发送“尾刀”")
             self._boss_status()
         else:
             if not (self.__qqid in self.__data[1].keys()):
@@ -346,7 +346,7 @@ class Record():
                 random.randint(0, 9999))
             self.__save()
             self.__comment += "未重置"
-            self.txt_list.append("注意：此操作将删除所有记录，公会战期间小心使用，如果确定重新开始请发送“#重新开始{}”"
+            self.txt_list.append("注意：此操作将删除所有记录，公会战期间小心使用，如果确定重新开始请发送“重新开始{}”"
                                  .format(self.__conf[self.__groupid]["res"]))
 
     def _mailopt(self, opt, addr=""):
@@ -482,7 +482,7 @@ class Record():
                 self.__comment += "已成功选择"
             else:
                 self.txt_list.append(
-                    "由于日服、台服boss血量不同、每日重置时间不同，请发送“#选择日服”或“#选择台服”")
+                    "由于日服、台服boss血量不同、每日重置时间不同，请发送“选择日服”或“选择台服”")
                 self.__comment += "未选择"
         elif func_num == 2:
             if cmd.startswith("报刀"):  # 历史遗留问题

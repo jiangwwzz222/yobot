@@ -297,11 +297,11 @@ class Report():
             return
         except smtplib.SMTPAuthenticationError:
             self.txt_list.append(
-                r"发件邮箱密码错误，请发送“#设置邮箱”输入正确密码")
+                r"发件邮箱密码错误，请发送“设置邮箱”输入正确密码")
             return
         except smtplib.SMTPSenderRefused:
             self.txt_list.append(
-                r"发件邮箱已被服务商禁用，请发送“#设置邮箱”输入新的邮箱")
+                r"发件邮箱已被服务商禁用，请发送“设置邮箱”输入新的邮箱")
             return
         except Exception as other:
             self.txt_list.append("未知错误：")
