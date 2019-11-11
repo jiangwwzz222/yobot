@@ -1,3 +1,5 @@
+import json
+
 from aiocqhttp import CQHttp
 
 import yobot
@@ -18,8 +20,8 @@ async def handle_msg(context):
         return None
 
 try:
-    with open as target:
-        pass
+    with open("yobot_config.json", "r") as f:
+        port = json.load(f)["port"]
 except:
     port = 8080
 
