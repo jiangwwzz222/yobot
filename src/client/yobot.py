@@ -4,7 +4,7 @@ import os
 import sys
 from typing import List
 
-from plugins import *
+from plugins import check_ver, switcher, yobot_msg, gacha, jjc_consult, boss_dmg, updater, yobot_errors
 
 
 class Yobot:
@@ -29,7 +29,7 @@ class Yobot:
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
-                              "https://yuudi.github.io/v3/ver.json",
+                              "https://yuudi.github.io/yobot/v3/ver.json",
                               "http://api.yobot.xyz/v3/version/"]}}
         self.glo_setting.update(inner_info)
 

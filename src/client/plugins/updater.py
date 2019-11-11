@@ -25,19 +25,16 @@ class Updater:
             if response.status_code == 200:
                 break
         if response.status_code != 200:
-            return 1
+            return "无法连接服务器"
         verinfo = json.loads(response.text)
-        if not (force or verinfo["version"] > ver["localver"]):
-            return 2
-
+        if not (force or verinfo["version"] > self.ver["ver_id"]):
+            return "已经是最新版本"
         try:
             download_file = requests.get(verinfo["url"])
         except:
-            print("无法连接到{}".format(verinfo["url"]))
-            return 3
+            return "无法连接到{}".format(verinfo["url"])
         if download_file.status_code != 200:
-            print(verinfo["url"], "code:", download_file.status_code)
-            return 4
+            return verinfo["url"] + "code:" + str(download_file.status_code)
         fname = os.path.basename(verinfo["url"])
         with open(os.path.join(self.path, "temp", fname), "wb") as f:
             f.write(download_file.content)
@@ -46,24 +43,24 @@ class Updater:
             os.mkdir(os.path.join(self.path, "temp", verstr))
         with zipfile.ZipFile(os.path.join(self.path, "temp", fname), "r") as z:
             z.extractall(path=os.path.join(self.path, "temp", verstr))
-        os.remove(os.path.join(path, "temp", fname))
-        shutil.move(os.path.join(path, "temp", verstr, "yobot.exe"),
-                    os.path.join(path, "yobot.new.exe"))
+        os.remove(os.path.join(self.path, "temp", fname))
+        shutil.move(os.path.join(self.path, "temp", verstr, "yobot.exe"),
+                    os.path.join(self.path, "yobot.new.exe"))
         cmd = '''@echo off
             taskkill /f /im yobot.exe
             del yobot.exe
             ren yobot.new.exe yobot.exe
-            yobot.exe
+            start yobot.exe
             '''
-        with open(os.path.join(self.path,update.bat),"w") as f:
+        with open(os.path.join(self.path, "update.bat"), "w") as f:
             f.write(cmd)
         os.system("ping 127.0.0.1>nul && start {}\\update.bat".format(self.path))
-        exit()
+        raise KeyboardInterrupt()
 
     def linux_update(self, force: bool = False):
         git_dir = os.path.dirname(os.path.dirname(self.path))
         os.system("{}/update.sh".format(git_dir))
-        exit()
+        raise KeyboardInterrupt()
 
     @staticmethod
     def match(cmd: str) -> int:
