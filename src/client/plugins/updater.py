@@ -57,7 +57,7 @@ class Updater:
             '''
         with open(os.path.join(self.path,update.bat),"w") as f:
             f.write(cmd)
-        os.system("ping 127.0.0.1>nul && start {}\update.bat".format(self.path))
+        os.system("ping 127.0.0.1>nul && start {}\\update.bat".format(self.path))
         exit()
 
     def linux_update(self, force: bool = False):

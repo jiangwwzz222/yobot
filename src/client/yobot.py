@@ -12,8 +12,8 @@ class Yobot:
         dirname = os.path.dirname(sys.argv[0])
         config_f_path = os.path.join(dirname, "yobot_config.json")
         if not os.path.exists(config_f_path):
-            raise yobot_errors.File_error(
-                config_f_path + " not exists")
+            with open(config_f_path, "w", encoding="utf-8") as config_file:
+                config_file.write("{\n}")
         with open(config_f_path, "r", encoding="utf-8") as config_file:
             try:
                 self.glo_setting = json.load(config_file)
