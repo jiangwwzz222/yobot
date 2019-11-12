@@ -18,7 +18,8 @@ class Updater:
     def check_ver(self) -> bool:
         return True
 
-    def windows_update(self, force: bool = False):
+    def windows_update(self, force: bool = False, test_ver: int = 0):
+        test_version = ["stable", "beta", "alpha"][test_ver]
         if not os.path.exists(os.path.join(self.path, "temp")):
             os.mkdir(os.path.join(self.path, "temp"))
         for url in self.ver["check_url"]:
@@ -28,6 +29,7 @@ class Updater:
         if response.status_code != 200:
             return "无法连接服务器"
         verinfo = json.loads(response.text)
+        verinfo = verinfo[test_version]
         if not (force or verinfo["version"] > self.ver["ver_id"]):
             return "已经是最新版本"
         try:
@@ -72,31 +74,43 @@ class Updater:
         os.system("start " + os.path.join(self.path, "update.bat"))
         return "更新完成"
 
-    def linux_update(self, force: bool = False):
+    def linux_update(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
         os.system("{}/update.sh".format(git_dir))
         raise KeyboardInterrupt()
 
     @staticmethod
     def match(cmd: str) -> int:
-        if cmd == "更新":
-            return 1
-        elif cmd == "强制更新":
-            return 2
-        return 0
+        if cmd.startsWith("更新"):
+            para = cmd[2:]
+            match = 0x10
+        elif cmd.startsWith("强制更新"):
+            para = cmd[4:]
+            match = 0x20
+        else return 0
+        para = para.replace(" ", "")
+        if para == "alpha":
+            ver = 2
+        elif para == "beta":
+            ver = 1
+        else:
+            ver = 0
+        return match | ver
 
     def execute(self, match_num: int, msg: dict) -> dict:
-        if match_num == 1:
+        match = match_num & 0xf0
+        ver = match_num & 0x0f
+        if match == 1:
             force = False
-        elif match_num == 2:
+        elif match == 2:
             force = True
         if platform.system() == "Windows":
             if self.evn == "exe":
-                reply = self.windows_update(force)
+                reply = self.windows_update(force, ver)
             elif self.evn == "py" or self.evn == "python":
-                reply = self.windows_update_git(force)
+                reply = self.windows_update_git(force, ver)
         else:
-            reply = self.linux_update(force)
+            reply = self.linux_update(force, ver)
         return {
             "reply": reply,
             "block": True
