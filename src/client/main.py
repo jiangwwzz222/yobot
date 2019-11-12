@@ -10,8 +10,10 @@ conn = CQHttp(access_token='your-token',
 bot = yobot.Yobot()
 
 
-@conn.on_message()
+@conn.on_message
 async def handle_msg(context):
+    if context["message_type"] != "group":
+        return None
     reply = bot.proc(context)
     if reply != "":
         return {'reply': reply,

@@ -3,7 +3,6 @@ import os
 import platform
 import shutil
 import sys
-import time
 import zipfile
 
 import requests
@@ -49,45 +48,33 @@ class Updater:
         os.remove(os.path.join(self.path, "temp", fname))
         shutil.move(os.path.join(self.path, "temp", verstr, "yobot.exe"),
                     os.path.join(self.path, "yobot.new.exe"))
-        cmd = '''@echo off
-            cd /d "%~dp0"
-            cacls.exe "%SystemDrive%\System Volume Information" >nul 2>nul
-            if %errorlevel%==0 goto Admin
-            if exist "%temp%\getadmin.vbs" del /f /q "%temp%\getadmin.vbs"
-            echo Set RequestUAC = CreateObject^("Shell.Application"^)>"%temp%\getadmin.vbs"
-            echo RequestUAC.ShellExecute "%~s0","","","runas",1 >>"%temp%\getadmin.vbs"
-            echo WScript.Quit >>"%temp%\getadmin.vbs"
-            "%temp%\getadmin.vbs" /f
-            if exist "%temp%\getadmin.vbs" del /f /q "%temp%\getadmin.vbs"
-            exit
-
-            :Admin
-            taskkill /f /im yobot.exe
-            ping -n 1 127.0.0.1>nul
-            del yobot.exe
-            ren yobot.new.exe yobot.exe
-            start yobot.exe
-            exit
+        cmd = '''
+            kill -processname yobot
+            start-sleep 2
+            Remove-Item "yobot.exe"
+            rename-Item "yobot.new.exe" -NewName "yobot.exe"
+            Start-Process -FilePath "yobot.exe"
             '''
-        with open(os.path.join(self.path, "update.bat"), "w") as f:
+        with open(os.path.join(self.path, "update.ps1"), "w") as f:
             f.write(cmd)
-        os.system("start " + os.path.join(self.path, "update.bat"))
+        os.system("powershell -file " + os.path.join(self.path, "update.ps1"))
         return "更新完成"
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
-        os.system("{}/update.sh".format(git_dir))
-        raise KeyboardInterrupt()
+        os.system(os.path.join(git_dir,"update.sh"))
+        return "更新完成"
 
     @staticmethod
     def match(cmd: str) -> int:
-        if cmd.startsWith("更新"):
+        if cmd.startswith("更新"):
             para = cmd[2:]
             match = 0x10
-        elif cmd.startsWith("强制更新"):
+        elif cmd.startswith("强制更新"):
             para = cmd[4:]
             match = 0x20
-        else return 0
+        else:
+            return 0
         para = para.replace(" ", "")
         if para == "alpha":
             ver = 2
@@ -100,9 +87,9 @@ class Updater:
     def execute(self, match_num: int, msg: dict) -> dict:
         match = match_num & 0xf0
         ver = match_num & 0x0f
-        if match == 1:
+        if match == 0x10:
             force = False
-        elif match == 2:
+        elif match == 0x20:
             force = True
         if platform.system() == "Windows":
             if self.evn == "exe":
