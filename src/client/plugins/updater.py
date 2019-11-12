@@ -61,7 +61,7 @@ class Updater:
         exit()
 
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
-        git_dir = os.path.dirname(os.path.dirname(self.path))
+        git_dir = os.path.dirname(os.path.dirname(__file__))
         cmd = '''
         cd "{}"
         git pull
@@ -75,7 +75,7 @@ class Updater:
         exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
-        git_dir = os.path.dirname(os.path.dirname(self.path))
+        git_dir = os.path.dirname(os.path.dirname(__file__))
         cmd = '''
         cd "{}"
         git pull
