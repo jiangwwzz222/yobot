@@ -17,7 +17,7 @@ class Updater:
     def check_ver(self) -> bool:
         return True
 
-    def windows_update(self, force: bool = False, test_ver: int = 0):
+    def windows_update(self,force: bool = False,test_ver: int = 0):
         test_version = ["stable", "beta", "alpha"][test_ver]
         if not os.path.exists(os.path.join(self.path, "temp")):
             os.mkdir(os.path.join(self.path, "temp"))
@@ -58,12 +58,35 @@ class Updater:
         with open(os.path.join(self.path, "update.ps1"), "w") as f:
             f.write(cmd)
         os.system("powershell -file " + os.path.join(self.path, "update.ps1"))
-        return "更新完成"
+        exit()
+
+    def windows_update_git(self, force: bool = False, test_ver: int = 0):
+        git_dir = os.path.dirname(os.path.dirname(self.path))
+        cmd = '''
+        cd "{}"
+        git pull
+        ping -n 2 127.0.0.1>nul
+        cd src\\client
+        python main.py
+        '''.format(git_dir)
+        with open(os.path.join(git_dir, "update.bat"), "w") as f:
+            f.write(cmd)
+        os.system('"' + os.path.join(git_dir, "update.bat") + '"')
+        exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
-        os.system(os.path.join(git_dir,"update.sh"))
-        return "更新完成"
+        cmd = '''
+        cd "{}"
+        git pull
+        sleep 1s
+        cd src/client
+        python3 main.py
+        '''.format(git_dir)
+        with open(os.path.join(git_dir, "update.sh"), "w") as f:
+            f.write(cmd)
+        os.system(os.path.join(git_dir, "update.sh"))
+        exit()
 
     @staticmethod
     def match(cmd: str) -> int:
