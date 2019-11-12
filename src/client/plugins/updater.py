@@ -66,7 +66,7 @@ class Updater:
         git pull
         start-sleep 1
         Start-Process -FilePath "python.exe" -ArgumentList "{}"
-        '''.format(os.path.join(git_dir, "main.py"))
+        '''.format(os.path.join(self.path, "main.py"))
         with open(os.path.join(git_dir, "update.ps1"), "w") as f:
             f.write(cmd)
         os.system('powershell -file "' + os.path.join(git_dir, "update.ps1") + '"')
