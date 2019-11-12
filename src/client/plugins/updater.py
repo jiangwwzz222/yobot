@@ -61,7 +61,7 @@ class Updater:
         exit()
 
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
-        git_dir = os.path.dirname(os.path.dirname(__file__))
+        git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
         cd "{}"
         git pull
@@ -71,11 +71,11 @@ class Updater:
         '''.format(git_dir)
         with open(os.path.join(git_dir, "update.bat"), "w") as f:
             f.write(cmd)
-        os.system('"' + os.path.join(git_dir, "update.bat") + '"')
+        os.system('start "' + os.path.join(git_dir, "update.bat") + '"')
         exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
-        git_dir = os.path.dirname(os.path.dirname(__file__))
+        git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
         cd "{}"
         git pull

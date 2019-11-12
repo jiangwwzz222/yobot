@@ -10,7 +10,7 @@ from plugins import check_ver, switcher, yobot_msg, gacha, jjc_consult, boss_dmg
 class Yobot:
     def __init__(self):
         # dirname = os.__file__
-        dirname = os.path.dirname(sys.argv[0])
+        dirname = os.getcwd()
         config_f_path = os.path.join(dirname, "yobot_config.json")
         if not os.path.exists(config_f_path):
             with open(config_f_path, "w", encoding="utf-8") as config_file:
