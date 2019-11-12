@@ -17,7 +17,7 @@ class Updater:
     def check_ver(self) -> bool:
         return True
 
-    def windows_update(self,force: bool = False,test_ver: int = 0):
+    def windows_update(self, force: bool = False, test_ver: int = 0):
         test_version = ["stable", "beta", "alpha"][test_ver]
         if not os.path.exists(os.path.join(self.path, "temp")):
             os.mkdir(os.path.join(self.path, "temp"))
@@ -63,15 +63,13 @@ class Updater:
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
-        cd "{}"
         git pull
-        ping -n 2 127.0.0.1>nul
-        cd src\\client
-        python main.py
-        '''.format(git_dir)
-        with open(os.path.join(git_dir, "update.bat"), "w") as f:
+        start-sleep 1
+        Start-Process -FilePath "python.exe" -ArgumentList "{}"
+        '''.format(os.path.join(git_dir, "main.py"))
+        with open(os.path.join(git_dir, "update.ps1"), "w") as f:
             f.write(cmd)
-        os.system('start "' + os.path.join(git_dir, "update.bat") + '"')
+        os.system('powershell -file "' + os.path.join(git_dir, "update.ps1") + '"')
         exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
