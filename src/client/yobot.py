@@ -25,8 +25,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot 3.0.0_alpha_b2",
-                "ver_id": 2910,
+                "ver_name": "yobot[v3.0.0-beta-1]",
+                "ver_id": 2911,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
