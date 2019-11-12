@@ -9,11 +9,12 @@ from plugins import check_ver, switcher, yobot_msg, gacha, jjc_consult, boss_dmg
 
 class Yobot:
     def __init__(self):
+        # dirname = os.__file__
         dirname = os.path.dirname(sys.argv[0])
         config_f_path = os.path.join(dirname, "yobot_config.json")
         if not os.path.exists(config_f_path):
             with open(config_f_path, "w", encoding="utf-8") as config_file:
-                config_file.write("{\n}")
+                config_file.write('{"port":9222,"run-as":"exe"}')
         with open(config_f_path, "r", encoding="utf-8") as config_file:
             try:
                 self.glo_setting = json.load(config_file)
@@ -24,8 +25,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot 3.0.0_alpha_b1",
-                "ver_id": 2906,
+                "ver_name": "yobot 3.0.0_alpha_b2",
+                "ver_id": 2910,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
@@ -43,7 +44,7 @@ class Yobot:
         self.plugins.append(boss_dmg.Boss_dmg(self.glo_setting))
 
     def proc(self, msg: dict) -> str:
-        if msg["sender"]["card"] == "":
+        if msg["sender"].get("crad", "") == "":
             msg["sender"]["card"] = msg["sender"]["nickname"]
         replys = []
         for pitem in self.plugins:

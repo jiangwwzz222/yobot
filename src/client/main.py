@@ -23,6 +23,6 @@ try:
     with open("yobot_config.json", "r") as f:
         port = json.load(f)["port"]
 except:
-    port = 8080
+    port = 9222
 
 conn.run(host='127.0.0.1', port=port)

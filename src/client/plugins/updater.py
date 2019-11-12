@@ -11,6 +11,7 @@ import requests
 
 class Updater:
     def __init__(self, glo_setting: dict):
+        self.evn = glo_setting["run-as"]
         self.path = glo_setting["dirname"]
         self.ver = glo_setting["version"]
 
@@ -47,15 +48,29 @@ class Updater:
         shutil.move(os.path.join(self.path, "temp", verstr, "yobot.exe"),
                     os.path.join(self.path, "yobot.new.exe"))
         cmd = '''@echo off
+            cd /d "%~dp0"
+            cacls.exe "%SystemDrive%\System Volume Information" >nul 2>nul
+            if %errorlevel%==0 goto Admin
+            if exist "%temp%\getadmin.vbs" del /f /q "%temp%\getadmin.vbs"
+            echo Set RequestUAC = CreateObject^("Shell.Application"^)>"%temp%\getadmin.vbs"
+            echo RequestUAC.ShellExecute "%~s0","","","runas",1 >>"%temp%\getadmin.vbs"
+            echo WScript.Quit >>"%temp%\getadmin.vbs"
+            "%temp%\getadmin.vbs" /f
+            if exist "%temp%\getadmin.vbs" del /f /q "%temp%\getadmin.vbs"
+            exit
+
+            :Admin
             taskkill /f /im yobot.exe
+            ping -n 1 127.0.0.1>nul
             del yobot.exe
             ren yobot.new.exe yobot.exe
             start yobot.exe
+            exit
             '''
         with open(os.path.join(self.path, "update.bat"), "w") as f:
             f.write(cmd)
-        os.system("ping 127.0.0.1>nul && start {}\\update.bat".format(self.path))
-        raise KeyboardInterrupt()
+        os.system("start " + os.path.join(self.path, "update.bat"))
+        return "更新完成"
 
     def linux_update(self, force: bool = False):
         git_dir = os.path.dirname(os.path.dirname(self.path))
@@ -76,7 +91,10 @@ class Updater:
         elif match_num == 2:
             force = True
         if platform.system() == "Windows":
-            reply = self.windows_update(force)
+            if self.evn == "exe":
+                reply = self.windows_update(force)
+            elif self.evn == "py" or self.evn == "python":
+                reply = self.windows_update_git(force)
         else:
             reply = self.linux_update(force)
         return {
