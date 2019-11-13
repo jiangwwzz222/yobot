@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import base64
 import json
 import os
@@ -8,7 +6,7 @@ from typing import Union
 
 
 class Switcher:
-    setting_url = "http://io.yobot.xyz/v3/setting"
+    setting_url = "http://io.yobot.monster/v3/3.0.0/settings"
     setting_refer_url = "https://yobot.xyz/setting-help"
     switchers = {
         "抽卡": "gacha",
