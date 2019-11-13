@@ -427,7 +427,7 @@ class Record():
             return 2
         elif (cmd == "尾刀" or cmd == "收尾" or cmd == "收掉" or cmd == "击败"):
             return 3
-        elif re.match(r"\[CQ:at,qq=\d{5,10}\].+", cmd):
+        elif re.match(r"\[CQ:at,qq=\d{5,10}\] ?(\d+[wWkK万]?|尾刀|收尾|收掉|击败)", cmd):
             return 400
         elif re.match(r"@.+[:：].+", cmd):
             return 401

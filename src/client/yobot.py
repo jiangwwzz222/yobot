@@ -44,7 +44,7 @@ class Yobot:
         self.plugins.append(boss_dmg.Boss_dmg(self.glo_setting))
 
     def proc(self, msg: dict) -> str:
-        if msg["sender"].get("crad", "") == "":
+        if msg["sender"].get("card", "") == "":
             msg["sender"]["card"] = msg["sender"]["nickname"]
         replys = []
         for pitem in self.plugins:
