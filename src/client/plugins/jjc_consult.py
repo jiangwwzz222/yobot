@@ -15,6 +15,7 @@ from plugins.yobot_errors import Server_error
 class Consult:
     URL = "http://api.yobot.xyz/v2/nicknames/?type=csv"
     Feedback_URL = "http://api.yobot.xyz/v2/nicknames/?type=feedback&name="
+    ShowSolution_URL = "http://io.yobot.monster/v3/3.0.0/jjc_consult_solution/?s="
 
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
@@ -54,32 +55,60 @@ class Consult:
         data = requests.get("http://api.yobot.xyz/jjc_search?def=" + query)
         res = json.loads(data.text)
         if(res["code"] == 0):
-            reply += "从pcrdfans com找到{}条记录\n".format(
-                len(res["data"]["result"]))
-            line = "\n=======\n"
-            for result in res["data"]["result"]:
-                reply += line
-                line = "\n-------\n"
-                text = ""
-                for atker in result["atk"]:
-                    text += self.number[atker["id"]]
-                    if atker["equip"] or atker["star"]:
-                        cmt = ""
-                        if atker["star"]:
-                            cmt += str(atker["star"])
-                        if atker["equip"]:
-                            cmt += "专"
-                        text += "("+cmt+")"
-                    text += " "
-                text += "({},{}赞{}踩)".format(
-                    result["updated"][2:10],
-                    result["up"],
-                    result["down"])
-                reply += text
+            if self.setting.get("show_jjc_solution", "url") == "url":
+                reply += self.dump_url(res)
+            else:
+                reply += self.dump_text(res)
         else:
             raise Server_error("error code: {}, message : {}".format(
                 res["code"], res["message"]))
         return reply
+
+    def dump_text(self, res: dict) -> str:
+        reply = ""
+        reply += "从pcrdfans com找到{}条记录\n".format(
+            len(res["data"]["result"]))
+        line = "\n=======\n"
+        for result in res["data"]["result"]:
+            reply += line
+            line = "\n-------\n"
+            text = ""
+            for atker in result["atk"]:
+                text += self.number[atker["id"]]
+                if atker["equip"] or atker["star"]:
+                    cmt = ""
+                    if atker["star"]:
+                        cmt += str(atker["star"])
+                    if atker["equip"]:
+                        cmt += "专"
+                    text += "("+cmt+")"
+                text += " "
+            text += "({},{}赞{}踩)".format(
+                result["updated"][2:10],
+                result["up"],
+                result["down"])
+            reply += text
+        return reply
+
+    def dump_url(self, res: dict) -> str:
+        solution = []
+        for result in res["data"]["result"]:
+            team = []
+            team.append("{}-{}".format(
+                result["up"],
+                result["down"]
+            ))
+            for atker in result["atk"]:
+                char_id = atker["id"]+(
+                    30 if atker["star"] < 6 else 60)
+                team.append("{}-{}-{}".format(
+                    char_id,
+                    atker["star"],
+                    (1 if atker["equip"] else 0)
+                ))
+            solution.append("_".join(team))
+        url = self.ShowSolution_URL + ".".join(solution)
+        return url
 
     @staticmethod
     def match(cmd: str) -> int:
@@ -89,7 +118,7 @@ class Consult:
             return 0
 
     def execute(self, match_num: int, msg: dict) -> dict:
-        if self.setting.get("jjc_consult",True) == False:
+        if self.setting.get("jjc_consult", True) == False:
             reply = "此功能未启用"
         else:
             anlz = self.user_input(msg["raw_message"][5:])
