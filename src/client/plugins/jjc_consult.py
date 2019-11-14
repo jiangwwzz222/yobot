@@ -10,7 +10,7 @@ import time
 import requests
 
 from plugins.yobot_errors import Server_error
-
+import plugins.shorten_url
 
 class Consult:
     URL = "http://api.yobot.xyz/v2/nicknames/?type=csv"
@@ -108,6 +108,7 @@ class Consult:
                 ))
             solution.append("_".join(team))
         url = self.ShowSolution_URL + ".".join(solution)
+        url = plugins.shorten_url.shorten(url)
         return url
 
     @staticmethod
