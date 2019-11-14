@@ -12,6 +12,7 @@ import requests
 from plugins.yobot_errors import Server_error
 import plugins.shorten_url
 
+
 class Consult:
     URL = "http://api.yobot.xyz/v2/nicknames/?type=csv"
     Feedback_URL = "http://api.yobot.xyz/v2/nicknames/?type=feedback&name="
@@ -66,7 +67,7 @@ class Consult:
 
     def dump_text(self, res: dict) -> str:
         reply = ""
-        reply += "从pcrdfans com找到{}条记录\n".format(
+        reply += "从pcrdfans·com找到{}条记录\n".format(
             len(res["data"]["result"]))
         line = "\n=======\n"
         for result in res["data"]["result"]:
@@ -91,6 +92,8 @@ class Consult:
         return reply
 
     def dump_url(self, res: dict) -> str:
+        if len(res["data"]["result"]) == 0:
+            return "从pcrdfans·com没有找到解法"
         solution = []
         for result in res["data"]["result"]:
             team = []
@@ -109,7 +112,7 @@ class Consult:
             solution.append("_".join(team))
         url = self.ShowSolution_URL + ".".join(solution)
         url = plugins.shorten_url.shorten(url)
-        return url
+        return "找到解法：" + url
 
     @staticmethod
     def match(cmd: str) -> int:
