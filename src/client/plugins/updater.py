@@ -69,7 +69,8 @@ class Updater:
         '''.format(os.path.join(self.path, "main.py"))
         with open(os.path.join(git_dir, "update.ps1"), "w") as f:
             f.write(cmd)
-        os.system('powershell -file "' + os.path.join(git_dir, "update.ps1") + '"')
+        os.system('powershell -file "'
+                  + os.path.join(git_dir, "update.ps1") + '"')
         exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
@@ -105,7 +106,7 @@ class Updater:
             ver = 0
         return match | ver
 
-    def execute(self, match_num: int, msg: dict) -> dict:
+    def execute(self, match_num: int, msg: dict = {}) -> dict:
         match = match_num & 0xf0
         ver = match_num & 0x0f
         if match == 0x10:

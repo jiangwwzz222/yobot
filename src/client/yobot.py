@@ -34,14 +34,14 @@ class Yobot:
                               "http://api.yobot.xyz/v3/version/"]}}
         self.glo_setting.update(inner_info)
 
-        self.plugins = []
-        # self.plugins.append(check_ver.Check(self.glo_setting))
-        self.plugins.append(switcher.Switcher(self.glo_setting))
-        self.plugins.append(yobot_msg.Message(self.glo_setting))
-        self.plugins.append(gacha.Gacha(self.glo_setting))
-        self.plugins.append(jjc_consult.Consult(self.glo_setting))
-        self.plugins.append(updater.Updater(self.glo_setting))
-        self.plugins.append(boss_dmg.Boss_dmg(self.glo_setting))
+        self.plugins = [
+            updater.Updater(self.glo_setting),
+            switcher.Switcher(self.glo_setting),
+            yobot_msg.Message(self.glo_setting),
+            gacha.Gacha(self.glo_setting),
+            jjc_consult.Consult(self.glo_setting),
+            boss_dmg.Boss_dmg(self.glo_setting)
+        ]
 
     def proc(self, msg: dict) -> str:
         if msg["sender"].get("card", "") == "":
@@ -55,3 +55,7 @@ class Yobot:
                 if res["block"]:
                     break
         return "\n".join(replys)
+
+    def execute(self, cmd: str):
+        if cmd == "update":
+            self.plugins[0].execute(0x10)
