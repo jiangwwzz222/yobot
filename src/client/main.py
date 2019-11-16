@@ -35,8 +35,8 @@ if os.path.exists("yobot_config.json"):
     with open("yobot_config.json", "r") as f:
         config = json.load(f)
         port = config.get("port", 9222)
-        update_hour = config.get("update_hour", 3)
-        update_minute = config.get("update_minute", 30)
+        update_time = config.get("update-time", "3:30")
+        update_hour, update_minute = update_time.split(":")
 else:
     port = 9222
     update_hour = 3

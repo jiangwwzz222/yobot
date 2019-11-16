@@ -38,7 +38,7 @@ class Consult:
                 self.number[int(row[0])] = row[1]
 
     def user_input(self, cmd: str) -> dict:
-        def_lst = []
+        def_set = set()
         in_list = cmd.split()
         if len(in_list) > 5:
             return {"code": 5, "msg": "防守人数过多"}
@@ -46,8 +46,13 @@ class Consult:
             item = self.nickname.get(index.lower(), "error")
             if item == "error":
                 requests.get(self.Feedback_URL+index)
-                return {"code": 1, "msg": "没有找到"+index}
-            def_lst.append(item)
+                return {
+                    "code": 1,
+                    "msg": "没有找到【{}】，已自动反馈，目前昵称表：{}".format(index, self.URL)}
+            def_set.add(item)
+            def_lst = list(def_set)
+        if len(def_lst) < 3:
+            return {"code": 3, "msg": "防守人数过少"}
         return {"code": 0, "def_lst": def_lst}
 
     def jjcsearch(self, def_lst: list) -> str:

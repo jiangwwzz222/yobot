@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta name='viewport' content='width=device-width, initial-scale=1' charset="utf-8" />
+    <title>yobot设置</title>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        function Confirm() {
+            var formData = {};
+            var t = $('#setting').serializeArray();
+            $.each(t, function () {
+                formData[this.name] = this.value;
+            });
+            if (formData["super-admin"].search(/^\d{5,10}$/)) {
+                alert("请填写正确QQ号");
+                return
+            }
+            formData["super-admin"] = parseInt(formData["super-admin"]);
+            if (formData["update-time"] == "") {
+                alert("请填写自动更新时间");
+                return
+            }
+            formData["setting-restrict"] = parseInt(formData["setting-restrict"]);
+            formData["gacha_on"] = formData["gacha_on"] == "true";
+            var text = JSON.stringify({ version: 3000, settings: formData });
+            $.post("1234567"/*this is coding api address*/, { raw: text }, function (data) {
+                $('#pc #setting_code').attr("value", "设置码" + data);
+            });
+        }
+
+        function Copy_code() {
+            let a = document.forms["pc"]["setting_code"];
+            a.select();
+            document.execCommand("Copy");
+            alert("已复制，请在群里粘贴。");
+        }
+    </script>
+</head>
+
+<body>
+    <p><a href="https://yobot.xyz/">返回主页</a></p>
+    <h1>设置</h1>
+    <form id="setting">
+        <p>主人QQ：<input type="number" name="super-admin"></p>
+        <p>设置权限：
+            <select name="setting-restrict">
+                <option value="3">所有人</option>
+                <option value="2">管理员</option>
+                <option value="1">群主</option>
+                <option value="0">仅主人</option>
+            </select>
+        </p>
+        <p>自动更新时间：<br>每天<input type="time" name="update-time"></p>
+        <p>jjc查询结果显示：
+            <select name="show_jjc_solution">
+                <option value="url">网页</option>
+                <option value="text">文字</option>
+            </select>
+        </p>
+        <p>抽卡
+            <select name="gacha_on">
+                <option value="true">开启</option>
+                <option value="false">关闭</option>
+            </select>
+        </p>
+        <input type="button" value="确定" onclick="Confirm()" />
+    </form>
+    <form id="pc">
+        <input type="text" id="setting_code">
+        <input type="button" value="复制" onclick="Copy_code()">
+    </form>
+</body>
+
+</html>
