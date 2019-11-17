@@ -21,7 +21,7 @@
                 alert("请填写自动更新时间");
                 return
             }
-            formData["setting-restrict"] = parseInt(formData["setting-restrict"]);
+            formData["setting-restrict"] = [parseInt(formData["setting-restrict"])];
             formData["gacha_on"] = formData["gacha_on"] == "true";
             var text = JSON.stringify({ version: 3000, settings: formData });
             $.post("1234567"/*this is coding api address*/, { raw: text }, function (data) {

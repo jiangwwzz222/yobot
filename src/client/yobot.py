@@ -4,7 +4,8 @@ import os
 import sys
 from typing import List
 
-from plugins import check_ver, switcher, yobot_msg, gacha, jjc_consult, boss_dmg, updater, yobot_errors
+from plugins import (check_ver, switcher, yobot_msg, gacha,
+                     jjc_consult, boss_dmg, updater, yobot_errors)
 
 
 class Yobot:
@@ -58,4 +59,5 @@ class Yobot:
 
     def execute(self, cmd: str):
         if cmd == "update":
-            self.plugins[0].execute(0x10)
+            res = self.plugins[0].execute(0x10)
+        return res["reply"]

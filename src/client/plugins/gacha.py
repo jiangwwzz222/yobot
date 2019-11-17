@@ -1,7 +1,3 @@
-# coding=utf-8
-
-# todo:命令和执行顺序还没写
-
 import os
 import pickle
 import random
