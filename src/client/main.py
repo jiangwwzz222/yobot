@@ -34,10 +34,12 @@ def scheduled_update():
 if os.path.exists("yobot_config.json"):
     with open("yobot_config.json", "r") as f:
         config = json.load(f)
+        host = config.get("host", "127.0.0.1")
         port = config.get("port", 9222)
         update_time = config.get("update-time", "3:30")
         update_hour, update_minute = update_time.split(":")
 else:
+    host = "127.0.0.1"
     port = 9222
     update_hour = 3
     update_minute = 30
@@ -47,4 +49,4 @@ trigger = CronTrigger(hour=update_hour, minute=update_minute)
 sche.add_job(scheduled_update, trigger)
 
 sche.start()
-conn.run(host='127.0.0.1', port=port)
+conn.run(host=host, port=port)

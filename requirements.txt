@@ -1,0 +1,3 @@
+aiocqhttp
+json5
+requests

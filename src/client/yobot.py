@@ -4,8 +4,8 @@ import os
 import sys
 from typing import List
 
-from plugins import (check_ver, switcher, yobot_msg, gacha,
-                     jjc_consult, boss_dmg, updater, yobot_errors)
+from plugins import (switcher, yobot_msg, gacha, jjc_consult, boss_dmg,
+                     updater, yobot_errors)
 
 
 class Yobot:

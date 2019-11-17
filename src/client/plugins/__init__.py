@@ -1,5 +1,4 @@
 __all__ = [
-    'check_ver',
     'switcher',
     'yobot_msg',
     'gacha',
