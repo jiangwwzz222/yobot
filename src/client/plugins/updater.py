@@ -84,7 +84,8 @@ class Updater:
         '''.format(git_dir)
         with open(os.path.join(git_dir, "update.sh"), "w") as f:
             f.write(cmd)
-        os.system(os.path.join(git_dir, "update.sh"))
+        os.system("chmod u+x {0} && {0}".format(
+            os.path.join(git_dir, "update.sh")))
         exit()
 
     @staticmethod
