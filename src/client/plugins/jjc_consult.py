@@ -45,10 +45,15 @@ class Consult:
         for index in in_list:
             item = self.nickname.get(index.lower(), "error")
             if item == "error":
-                requests.get(self.Feedback_URL+index)
+                try:
+                    requests.get(self.Feedback_URL+index)
+                except requests.exceptions.ConnectionError:
+                    msg = "没有找到【{}】，自动反馈失败，目前昵称表：{}".format(index, self.URL)
+                else:
+                    msg = "没有找到【{}】，已自动反馈，目前昵称表：{}".format(index, self.URL)
                 return {
                     "code": 1,
-                    "msg": "没有找到【{}】，已自动反馈，目前昵称表：{}".format(index, self.URL)}
+                    "msg": msg}
             def_set.add(item)
             def_lst = list(def_set)
         if len(def_lst) < 3:
@@ -58,7 +63,10 @@ class Consult:
     def jjcsearch(self, def_lst: list) -> str:
         reply = ""
         query = ".".join(def_lst)
-        data = requests.get("http://api.yobot.xyz/jjc_search?def=" + query)
+        try:
+            data = requests.get("http://api.yobot.xyz/jjc_search?def=" + query)
+        except requests.exceptions.ConnectionError:
+            return "无法连接服务器"
         res = json.loads(data.text)
         if(res["code"] == 0):
             if self.setting.get("show_jjc_solution", "url") == "url":

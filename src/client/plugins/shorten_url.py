@@ -9,7 +9,11 @@ def shorten(url: str) -> str:
         'url': url,
         'format': 'simple'
     }
-    resp = requests.post(shorten_api, data=data)
-    if resp.status_code == 200:
-        url = resp.text
+    try:
+        resp = requests.post(shorten_api, data=data)
+    except requests.exceptions.ConnectionError:
+        pass
+    else:
+        if resp.status_code == 200:
+            url = resp.text
     return url

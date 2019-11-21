@@ -5,7 +5,7 @@ import sys
 from typing import List
 
 from plugins import (switcher, yobot_msg, gacha, jjc_consult, boss_dmg,
-                     updater, yobot_errors)
+                     updater, yobot_errors, char_consult)
 
 
 class Yobot:
@@ -40,6 +40,7 @@ class Yobot:
             switcher.Switcher(self.glo_setting),
             yobot_msg.Message(self.glo_setting),
             gacha.Gacha(self.glo_setting),
+            char_consult.Char_consult(self.glo_setting),
             jjc_consult.Consult(self.glo_setting),
             boss_dmg.Boss_dmg(self.glo_setting)
         ]
