@@ -6,6 +6,8 @@ from typing import Union
 
 import requests
 
+from plugins import setting
+
 
 class Switcher:
     code_api = "http://api.yobot.xyz/v3/coding/?code="
@@ -40,6 +42,8 @@ class Switcher:
             f = 0x300
         elif cmd.startswith("设置码"):
             f = 0x400
+        elif cmd.startswith("设置"):
+            f = 0x500
         else:
             f = 0
         return f
@@ -77,6 +81,20 @@ class Switcher:
                     self.setting.update(new_setting["settings"])
                     self.save_settings()
                     reply = "设置成功"
+        elif match_num == 0x500:
+            # 旧代码不想改，封装一下。。
+            in_code = cmd[2:]
+            setting_old = setting.Setting(self.setting)
+            if in_code.startswith("卡池"):
+                reply = setting_old.URL["pool"]
+            elif in_code.startswith("邮箱"):
+                reply = setting_old.URL["mail"] + "1"
+            elif in_code.startswith("AAAA"):
+                reply = setting_old.set_AAAA(in_code[:3:-1], 1)
+            elif in_code.startswith("AAAB"):
+                reply = setting_old.set_AAAB(in_code[:3:-1])
+            else:
+                reply = "位置的设置"
 
         return {
             "reply": reply,

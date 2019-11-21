@@ -1,10 +1,10 @@
 # yobot
-`ver 3.0.0-beta-4`
+
+`ver 3.0.0-beta-5`
 
 chatting bot for pcr(mobile game)
 
 公主连接群聊机器人、公主链接、公主连结
-
 
 source code in [/src](https://github.com/yuudi/yobot/tree/master/src/client) folder
 

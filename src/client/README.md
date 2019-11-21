@@ -7,16 +7,20 @@
 python最低要求为`python3.6`
 
 ## 主程序
+
 导入yobot并调用
-```
+
+```python
 import yobot
 bot = yobot.Yobot()
 reply = bot.proc(context)
 ```
+
 其中：
 `reply`是一个`str`；
 `context`是一个`dict`，其结构为
-```
+
+```python
 context = {
     "group_id": 12345, # 聊天编号（QQ群号）
     "raw_message": "你好", # 消息内容
@@ -27,4 +31,5 @@ context = {
     }
 }
 ```
+
 主文件`main.py`是利用`aiocqhttp`的应该方法
