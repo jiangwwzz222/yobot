@@ -33,7 +33,7 @@ def scheduled_update():
 
 
 def ask_for_input(msg: str, default: str = "",
-                  convert: callable = None, check: callable = None) -> Any:
+                  convert: callable = None, check: callable = None):
     flag = True
     while flag:
         print(msg, end="")

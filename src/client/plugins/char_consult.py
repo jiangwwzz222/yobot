@@ -49,7 +49,7 @@ class Char_consult:
         else:
             return 0
 
-    def execute(self, match_num: int, msg: dcit) -> dict:
+    def execute(self, match_num: int, msg: dict) -> dict:
         char_id = self.nickname.get(cmd[2:].lower(), None)
         if char_id == None:
             reply = "没有找到【{}】".format(cmd[2:])
@@ -59,6 +59,6 @@ class Char_consult:
             reply = (self.char_page["prefix"]
                      + str(self.char_page["page_id"][char_id]))
         return {
-            "reply": reply
+            "reply": reply,
             "block": True
         }
