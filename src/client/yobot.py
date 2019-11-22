@@ -26,8 +26,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.0.0-beta-5]",
-                "ver_id": 2915,
+                "ver_name": "yobot[v3.0.0-beta-6]",
+                "ver_id": 2916,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
@@ -46,6 +46,13 @@ class Yobot:
         ]
 
     def proc(self, msg: dict) -> str:
+        if self.glo_setting.get("preffix_on", False):
+            preffix = self.glo_setting.get("preffix_string", "")
+            if not msg["raw_message"].startswith(preffix):
+                return None
+            else:
+                msg["raw_message"] = (
+                    msg["raw_message"][len(msg["raw_message"]):])
         if msg["sender"].get("card", "") == "":
             msg["sender"]["card"] = msg["sender"]["nickname"]
         replys = []

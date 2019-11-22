@@ -242,7 +242,7 @@ class Report():
                                           "report",
                                           self.rpt_name,
                                           self.rpt_name+".zip"),
-                             compression=ZIP_DEFLATED,
+                             compression=zipfile.ZIP_DEFLATED,
                              mode="w",
                              compresslevel=9) as z:
             z.write(os.path.join(self.__path, "data", self.__groupid+".log"),

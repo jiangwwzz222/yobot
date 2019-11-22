@@ -18,6 +18,8 @@ class Updater:
         return True
 
     def windows_update(self, force: bool = False, test_ver: int = 0):
+        if not self.runable_powershell():
+            return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
         test_version = ["stable", "beta", "alpha"][test_ver]
         if not os.path.exists(os.path.join(self.path, "temp")):
             os.mkdir(os.path.join(self.path, "temp"))
@@ -61,6 +63,8 @@ class Updater:
         exit()
 
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
+        if not self.runable_powershell():
+            return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
         git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
         git pull
@@ -87,6 +91,15 @@ class Updater:
         os.system("chmod u+x {0} && {0}".format(
             os.path.join(git_dir, "update.sh")))
         exit()
+
+    @staticmethod
+    def runable_powershell() -> bool:
+        r = os.popen("powershell echo ok")
+        test = r.read()
+        if test == "ok\n":
+            return True
+        else:
+            return False
 
     @staticmethod
     def match(cmd: str) -> int:

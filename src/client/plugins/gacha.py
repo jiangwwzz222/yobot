@@ -243,7 +243,9 @@ class Gacha:
             return 0
 
     def execute(self, func_num: int, msg: dict):
-        if func_num == 1:
+        if not self.setting.get("gacha_on", True):
+            reply = "功能已关闭"
+        elif func_num == 1:
             reply = self.gacha(
                 qqid=msg["sender"]["user_id"],
                 nickname=msg["sender"]["card"])

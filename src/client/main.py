@@ -8,6 +8,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 
 import yobot
+import plugins.updater
 
 conn = CQHttp(access_token='your-token',
               enable_http_post=False)
@@ -20,7 +21,7 @@ async def handle_msg(context):
     if context["message_type"] != "group":
         return None
     reply = bot.proc(context)
-    if reply != "":
+    if reply != "" and reply is not None:
         return {'reply': reply,
                 'at_sender': False}
     else:
@@ -72,6 +73,12 @@ if __name__ == "__main__":
                              convert=lambda x: int(x), check=str.isdigit)
         update_hour = 3
         update_minute = 30
+
+    if not plugins.updater.Updater.runable_powershell():
+        print("================================================="
+              "powershell不可用，无法自动更新，请检查powershell权限"
+              "详情请查看：https://yobot.xyz/p/648/"
+              "=================================================")
 
     sche = AsyncIOScheduler()
     trigger = CronTrigger(hour=update_hour, minute=update_minute)
