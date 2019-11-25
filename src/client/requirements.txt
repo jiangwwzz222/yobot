@@ -1,3 +1,5 @@
 aiocqhttp
+apscheduler
 json5
 requests
+zhconv

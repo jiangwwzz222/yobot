@@ -4,8 +4,10 @@ import os
 import sys
 from typing import List
 
-from plugins import (switcher, yobot_msg, gacha, jjc_consult, boss_dmg,
-                     updater, yobot_errors, char_consult)
+from zhconv import convert as zhconvert
+
+from plugins import (boss_dmg, char_consult, gacha, jjc_consult, switcher,
+                     updater, yobot_errors, yobot_msg)
 
 
 class Yobot:
@@ -26,8 +28,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.0.0-beta-6]",
-                "ver_id": 2916,
+                "ver_name": "yobot[v3.0.0-beta-7]",
+                "ver_id": 2917,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
@@ -45,6 +47,12 @@ class Yobot:
             boss_dmg.Boss_dmg(self.glo_setting)
         ]
 
+        if not self.plugins[0].runable_powershell:
+            print("=================================================\n"
+                  "powershell不可用，无法自动更新，请检查powershell权限\n"
+                  "详情请查看：https://yobot.xyz/p/648/\n"
+                  "=================================================")
+
     def proc(self, msg: dict) -> str:
         if self.glo_setting.get("preffix_on", False):
             preffix = self.glo_setting.get("preffix_string", "")
@@ -52,7 +60,9 @@ class Yobot:
                 return None
             else:
                 msg["raw_message"] = (
-                    msg["raw_message"][len(msg["raw_message"]):])
+                    msg["raw_message"][len(preffix):])
+        if self.glo_setting.get("zht_in", False):
+            msg["raw_message"] = zhconvert(msg["raw_message"], "zh-hans")
         if msg["sender"].get("card", "") == "":
             msg["sender"]["card"] = msg["sender"]["nickname"]
         replys = []
@@ -63,7 +73,10 @@ class Yobot:
                 replys.append(res["reply"])
                 if res["block"]:
                     break
-        return "\n".join(replys)
+        reply_msg = "\n".join(replys)
+        if self.glo_setting.get("zht_out", False):
+            reply_msg = zhconvert(reply_msg, "zh-hant")
+        return reply_msg
 
     def execute(self, cmd: str):
         if cmd == "update":

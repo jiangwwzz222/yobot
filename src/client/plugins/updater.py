@@ -13,21 +13,27 @@ class Updater:
         self.evn = glo_setting["run-as"]
         self.path = glo_setting["dirname"]
         self.ver = glo_setting["version"]
+        self.runable_powershell = self.get_runable_powershell()
 
     def check_ver(self) -> bool:
         return True
 
     def windows_update(self, force: bool = False, test_ver: int = 0):
-        if not self.runable_powershell():
+        if not self.runable_powershell:
             return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
         test_version = ["stable", "beta", "alpha"][test_ver]
         if not os.path.exists(os.path.join(self.path, "temp")):
             os.mkdir(os.path.join(self.path, "temp"))
+        server_available = False
         for url in self.ver["check_url"]:
-            response = requests.get(url)
+            try:
+                response = requests.get(url)
+            except requests.ConnectionError:
+                continue
             if response.status_code == 200:
+                server_available = True
                 break
-        if response.status_code != 200:
+        if not server_available:
             return "无法连接服务器"
         verinfo = json.loads(response.text)
         verinfo = verinfo[test_version]
@@ -51,6 +57,7 @@ class Updater:
         shutil.move(os.path.join(self.path, "temp", verstr, "yobot.exe"),
                     os.path.join(self.path, "yobot.new.exe"))
         cmd = '''
+            start-sleep 2
             kill -processname yobot
             start-sleep 2
             Remove-Item "yobot.exe"
@@ -63,7 +70,7 @@ class Updater:
         exit()
 
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
-        if not self.runable_powershell():
+        if not self.runable_powershell:
             return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
         git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
@@ -93,12 +100,18 @@ class Updater:
         exit()
 
     @staticmethod
-    def runable_powershell() -> bool:
-        r = os.popen("powershell echo ok")
-        test = r.read()
-        if test == "ok\n":
+    def get_runable_powershell() -> bool:
+        r = os.popen("powershell Get-ExecutionPolicy")
+        text = r.read()
+        if text == "Bypass\n" or text == "RemoteSigned\n" or text == "Unrestricted\n":
             return True
         else:
+            # try:
+            #     os.system("powershell Set-ExecutionPolice RemoteSigned")
+            # r = os.popen("powershell Get-ExecutionPolicy")
+            # text = r.read()
+            # if text == "Bypass\n" or text == "RemoteSigned\n" or text == "Unrestricted\n":
+            #     return True
             return False
 
     @staticmethod

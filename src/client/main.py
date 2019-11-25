@@ -74,12 +74,6 @@ if __name__ == "__main__":
         update_hour = 3
         update_minute = 30
 
-    if not plugins.updater.Updater.runable_powershell():
-        print("================================================="
-              "powershell不可用，无法自动更新，请检查powershell权限"
-              "详情请查看：https://yobot.xyz/p/648/"
-              "=================================================")
-
     sche = AsyncIOScheduler()
     trigger = CronTrigger(hour=update_hour, minute=update_minute)
     sche.add_job(scheduled_update, trigger)

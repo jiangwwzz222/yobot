@@ -285,13 +285,13 @@ class Record():
                 self._boss_status()
 
     def __mod(self, cmd):
-        match = re.match(r"修正(.{1,4})=(\d+[wWkK万]?)$", cmd)
+        match = re.match(r"修[改正](.{1,4})=(\d+[wWkK万]?)$", cmd)
         if match == None:
             self.__comment += "未修正"
             self.txt_list.append("400参数错误")
         else:
             b = self._cmdtoint(match.group(2))
-            if match.group(1) in ["血量", "生命", "生命值", "体力"]:
+            if match.group(1) in ["血量", "生命", "生命值", "体力", "hp"]:
                 if b >= 1 and b <= (self.Boss_health[self.__conf[self.__groupid]["area"]]
                                     [self.__lap2stage(
                                         self.__conf[self.__groupid]["lap"])]
