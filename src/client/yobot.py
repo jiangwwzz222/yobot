@@ -29,8 +29,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.0.0-beta-7]",
-                "ver_id": 2917,
+                "ver_name": "yobot[v3.0.0-beta-8]",
+                "ver_id": 2918,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
@@ -63,6 +63,8 @@ class Yobot:
             else:
                 msg["raw_message"] = (
                     msg["raw_message"][len(preffix):])
+        if msg["sender"]["user_id"] in self.glo_setting.get("black-list",list()):
+            return None
         if self.glo_setting.get("zht_in", False):
             msg["raw_message"] = zhconvert(msg["raw_message"], "zh-hans")
         if msg["sender"].get("card", "") == "":

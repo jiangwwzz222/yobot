@@ -5,7 +5,7 @@ from plugins import dmg_record, lock_boss, reserve
 
 class Boss_dmg:
     def __init__(self, glo_setting: dict):
-        pass
+        self.setting = glo_setting
 
     @staticmethod
     def match(cmd: str) -> int:
@@ -32,6 +32,23 @@ class Boss_dmg:
             cmt = None
         else:
             cmt = cmdi[1]
+        if (cmd.startswith("重新开始") or cmd.startswith("选择") or cmd.startswith("切换")
+                or cmd.startswith("修正") or cmd.startswith("修改") or cmd == "上传报告"):
+            super_admins = self.setting.get("super-admin", list())
+            restrict = self.setting.get("setting-restrict", 3)
+            if msg["sender"]["user_id"] in super_admins:
+                role = 0
+            else:
+                role_str = msg["sender"]["role"]
+                if role_str == "owner":
+                    role = 1
+                elif role_str == "admin":
+                    role = 2
+                else:
+                    role = 3
+            if role > restrict:
+                reply = "你的权限不足"
+                return {"reply": reply, "block": True}
         txt_list = []
         if swit == 0x1000:
             lockboss = lock_boss.Lock(cmd_list[:3])

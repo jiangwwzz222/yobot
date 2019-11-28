@@ -3,6 +3,7 @@
     "port": 9222,
     "run-as": "python",
     "super-admin": [],
+    "black-list":[],
     "setting-restrict": 3,
     "auto_update": true,
     "update-time": "3:30",
