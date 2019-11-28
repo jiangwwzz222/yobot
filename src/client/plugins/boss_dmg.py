@@ -26,7 +26,12 @@ class Boss_dmg:
         cmd_list = (str(msg["group_id"]),
                     str(msg["sender"]["user_id"]),
                     msg["sender"]["card"])
-        cmd = msg["raw_message"]
+        cmdi = msg["raw_message"].split("//", 1)
+        cmd = cmdi[0]
+        if len(cmdi) == 1:
+            cmt = None
+        else:
+            cmt = cmdi[1]
         txt_list = []
         if swit == 0x1000:
             lockboss = lock_boss.Lock(cmd_list[:3])
@@ -41,6 +46,10 @@ class Boss_dmg:
                 rsv = reserve.Reserve(cmd_list[:3])
                 rsv.rsv(cmd, 0x20)
                 txt_list.extend(rsv.txt_list)
+            if func == 2 or func == 3 or func == 400 or func == 401:
+                lockboss = lock_boss.Lock(cmd_list[:3])
+                lockboss.boss_challenged()
+                txt_list.extend(lockboss.txt_list)
         if swit == 0x3000:
             rsv = reserve.Reserve(cmd_list[:3])
             rsv.rsv(cmd, func)
