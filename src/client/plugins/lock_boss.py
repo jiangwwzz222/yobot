@@ -90,6 +90,9 @@ class Lock():
                         bef % 60,
                         180 - bef))
 
+    def boss_challan(parameter_list):
+        pass
+
     @staticmethod
     def match(cmd):
         if cmd == "申请boss" or cmd == "锁定boss" or cmd == "申请出刀" or cmd == "申请撞刀" or cmd == "开始撞刀":

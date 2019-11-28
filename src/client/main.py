@@ -65,6 +65,7 @@ if __name__ == "__main__":
             config = json.load(f)
             host = config.get("host", "127.0.0.1")
             port = config.get("port", 9222)
+            auto_update = config.get("auto-update", True)
             update_time = config.get("update-time", "3:30")
             update_hour, update_minute = update_time.split(":")
     else:
@@ -74,9 +75,11 @@ if __name__ == "__main__":
         update_hour = 3
         update_minute = 30
 
-    sche = AsyncIOScheduler()
-    trigger = CronTrigger(hour=update_hour, minute=update_minute)
-    sche.add_job(scheduled_update, trigger)
+    if auto_update:
+        sche = AsyncIOScheduler()
+        trigger = CronTrigger(hour=update_hour, minute=update_minute)
+        sche.add_job(scheduled_update, trigger)
 
-    sche.start()
+        sche.start()
+
     conn.run(host=host, port=port)

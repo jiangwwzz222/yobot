@@ -510,6 +510,10 @@ class Record():
                     "请发送“选择日服”或“选择台服”或“选择国服”")
                 self.__comment += "未选择"
         elif func_num == 2:
+            if cmd.startswith("#"):
+                cmd = cmd[1:]
+            elif cmd.startswith("报刀"):
+                cmd = cmd[2:]
             self.__damage(cmd, comment)
         elif func_num == 3:
             self.__eliminate(comment)

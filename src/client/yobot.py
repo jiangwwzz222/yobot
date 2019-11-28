@@ -1,6 +1,7 @@
 # coding=utf-8
 import json
 import os
+import platform
 import sys
 from typing import List
 
@@ -47,7 +48,8 @@ class Yobot:
             boss_dmg.Boss_dmg(self.glo_setting)
         ]
 
-        if not self.plugins[0].runable_powershell:
+        if (platform.system() == "Windows"
+                and not self.plugins[0].runable_powershell):
             print("=================================================\n"
                   "powershell不可用，无法自动更新，请检查powershell权限\n"
                   "详情请查看：https://yobot.xyz/p/648/\n"

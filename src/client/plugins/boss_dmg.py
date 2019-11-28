@@ -32,22 +32,19 @@ class Boss_dmg:
             lockboss = lock_boss.Lock(cmd_list[:3])
             lockboss.lockboss(cmd, func, comment=cmt)
             txt_list.extend(lockboss.txt_list)
-            # return txt_list
-        # 记录伤害
         if swit == 0x2000:
             report = dmg_record.Record(cmd_list[:3])
             report.rep(cmd, func)
             txt_list.extend(report.txt_list)
-            # if func == 3 or func == 400 or func == 401:
-            #     pass  # 后面可能继续运行
-            # else:
-            #     return txt_list  # 后面不再运行
-        # 预约boss
+            if (cmd.endswith("尾刀") or cmd.endswith("收尾")
+                    or cmd.endswith("收掉") or cmd.endswith("击败")):
+                rsv = reserve.Reserve(cmd_list[:3])
+                rsv.rsv(cmd, 0x20)
+                txt_list.extend(rsv.txt_list)
         if swit == 0x3000:
             rsv = reserve.Reserve(cmd_list[:3])
             rsv.rsv(cmd, func)
             txt_list.extend(rsv.txt_list)
-            # return txt_list  # 后面不再运行
         return {
             "reply": "\n".join(txt_list),
             "block": True}

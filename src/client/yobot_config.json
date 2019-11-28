@@ -1,1 +1,15 @@
-{"port":9222,"run-as":"py"}
+{
+    "host": "127.0.0.1",
+    "port": 9222,
+    "run-as": "python",
+    "super-admin": [],
+    "setting-restrict": 3,
+    "auto_update": true,
+    "update-time": "3:30",
+    "show_jjc_solution": "url",
+    "gacha_on": true,
+    "preffix_on": false,
+    "preffix_string": "",
+    "zht_in": false,
+    "zht_out": false
+}
