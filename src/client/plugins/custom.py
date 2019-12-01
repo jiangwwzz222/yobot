@@ -5,6 +5,11 @@
 编写完毕后记得 git commit，
 想成为正式功能，欢迎发 pull request
 （只接收pcr相关功能，最好发到GitHub，我不怎么看Gitee）
+
+这个模块只是为了快速编写小功能，如果想编写完整插件可以使用：
+https://github.com/richardchien/python-aiocqhttp
+或者
+https://github.com/richardchien/nonebot
 '''
 
 
@@ -36,7 +41,7 @@ class Custom:
 
         if cmd == "你好":
             return 1
-        elif cmd == "世界":
+        elif cmd == "来份色图":
             return 2
         else:
             return 0
@@ -50,10 +55,23 @@ class Custom:
         '''
 
         if match_num == 1:
-            reply = "世界"
+            reply = "世界"  # 回复一个字符串
         elif match_num == 2:
-            reply = "那么大"
+            # 回复一个字符串和一个图片
+            reply = [
+                {
+                    "type": "text",
+                    "data": {"text": "图来了"}
+                },
+                {
+                    "type": "image",
+                    "date": {
+                        "file": "http://api.v3.yobot.xyz/draw.jpg",
+                        "cache": "0",
+                    }
+                }
+            ]
         return {
-            "reply": reply,  # 如果需要回复图片等，请参考https://cqhttp.cc/docs/#/Message
+            "reply": reply,  # 具体回复格式请参考https://cqhttp.cc/docs/#/Message
             "block": True  # 是否直接返回，阻止后续执行
         }
