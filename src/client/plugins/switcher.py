@@ -11,7 +11,7 @@ from plugins import setting
 
 class Switcher:
     code_api = "http://api.yobot.xyz/v3/coding/?code="
-    setting_url = "http://io.yobot.monster/3.0.0/settings/"
+    setting_url = "http://io.yobot.monster/3.0.0-b/settings/"
 
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
@@ -54,7 +54,7 @@ class Switcher:
         if msg["sender"]["user_id"] in super_admins:
             role = 0
         else:
-            role_str = msg["sender"]["role"]
+            role_str = msg["sender"].get("role",None)
             if role_str == "owner":
                 role = 1
             elif role_str == "admin":
@@ -75,7 +75,7 @@ class Switcher:
                 reply = "服务器错误：{}".format(res)
             else:
                 new_setting = json.loads(res)
-                if new_setting["version"] != 3000:
+                if new_setting["version"] != 2919:
                     reply = "设置码版本错误"
                 else:
                     self.setting.update(new_setting["settings"])

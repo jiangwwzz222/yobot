@@ -9,6 +9,7 @@
     "update-time": "3:30",
     "show_jjc_solution": "url",
     "gacha_on": true,
+    "gacha_private_on": true,
     "preffix_on": false,
     "preffix_string": "",
     "zht_in": false,

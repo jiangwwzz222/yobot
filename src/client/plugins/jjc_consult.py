@@ -16,7 +16,7 @@ import plugins.shorten_url
 class Consult:
     URL = "http://api.yobot.xyz/v2/nicknames/?type=csv"
     Feedback_URL = "http://api.yobot.xyz/v2/nicknames/?type=feedback&name="
-    ShowSolution_URL = "http://io.yobot.monster/v3/3.0.0/jjc_consult_solution/?s="
+    ShowSolution_URL = "http://io.yobot.monster/3.0.0-b/jjc_consult_solution/?s="
 
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
@@ -64,7 +64,8 @@ class Consult:
         reply = ""
         query = ".".join(def_lst)
         try:
-            data = requests.get("http://api.yobot.xyz/jjc_search?def=" + query)
+            data = requests.get(
+                "http://api.v3.yobot.xyz/jjc-search/?def=" + query)
         except requests.exceptions.ConnectionError:
             return "无法连接服务器"
         res = json.loads(data.text)
@@ -80,7 +81,7 @@ class Consult:
 
     def dump_text(self, res: dict) -> str:
         reply = ""
-        reply += "从pcrdfans·com找到{}条记录\n".format(
+        reply += "从pcrdfans.com找到{}条记录\n".format(
             len(res["data"]["result"]))
         line = "\n=======\n"
         for result in res["data"]["result"]:
@@ -88,7 +89,8 @@ class Consult:
             line = "\n-------\n"
             text = ""
             for atker in result["atk"]:
-                text += self.number[atker["id"]]
+                text += self.number.get(
+                    atker["id"], "unknown:{}".format(atker["id"]))
                 if atker["equip"] or atker["star"]:
                     cmt = ""
                     if atker["star"]:
@@ -106,24 +108,25 @@ class Consult:
 
     def dump_url(self, res: dict) -> str:
         if len(res["data"]["result"]) == 0:
-            return "从pcrdfans·com没有找到解法"
+            return "从pcrdfans.com没有找到解法"
         solution = []
         for result in res["data"]["result"]:
             team = []
-            team.append("{}-{}".format(
+            team.append("{}.{}.{}".format(
                 result["up"],
-                result["down"]
+                result["down"],
+                result["updated"][0:10].replace("-",".")
             ))
             for atker in result["atk"]:
                 char_id = atker["id"]+(
                     30 if atker["star"] < 6 else 60)
-                team.append("{}-{}-{}".format(
+                team.append("{}.{}.{}".format(
                     char_id,
                     atker["star"],
                     (1 if atker["equip"] else 0)
                 ))
             solution.append("_".join(team))
-        url = self.ShowSolution_URL + ".".join(solution)
+        url = self.ShowSolution_URL + "-".join(solution)
         url = plugins.shorten_url.shorten(url)
         return "找到解法：" + url
 

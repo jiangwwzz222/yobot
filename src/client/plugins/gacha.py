@@ -243,7 +243,12 @@ class Gacha:
             return 0
 
     def execute(self, func_num: int, msg: dict):
-        if not self.setting.get("gacha_on", True):
+        if ((
+                msg["message_type"] == "group"
+                and not self.setting.get("gacha_on", True))
+            or (
+                msg["message_type"] == "private"
+                and not self.setting.get("gacha_private_on", True))):
             reply = "功能已关闭"
         elif func_num == 1:
             reply = self.gacha(

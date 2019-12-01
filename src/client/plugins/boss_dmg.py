@@ -21,6 +21,9 @@ class Boss_dmg:
         return 0
 
     def execute(self, match_num: int, msg: dict) -> dict:
+        if msg["message_type"] == "group":
+            reply = "此功能仅可用于群聊"
+            return {"reply": reply, "block": True}
         swit = match_num & 0xf000
         func = match_num & 0x0fff
         cmd_list = (str(msg["group_id"]),
@@ -39,7 +42,7 @@ class Boss_dmg:
             if msg["sender"]["user_id"] in super_admins:
                 role = 0
             else:
-                role_str = msg["sender"]["role"]
+                role_str = msg["sender"].get("role",None)
                 if role_str == "owner":
                     role = 1
                 elif role_str == "admin":

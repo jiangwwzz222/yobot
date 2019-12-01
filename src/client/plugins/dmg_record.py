@@ -75,7 +75,7 @@ class Record():
                 f.seek(0)
                 f.truncate()
                 json.dump(mailcfg, f, ensure_ascii=False, indent=2)
-            self.txt_list.append("本群第一次使用，数据已初始化，请仔细阅读说明http://h.yobot.monster/")
+            self.txt_list.append("本群第一次使用，数据已初始化，请仔细阅读说明http://h3.yobot.monster/")
         else:
             with open(os.path.join(self.__path, "data", self.__groupid+".dat"), "rb") as f:
                 self.__data = pickle.load(f)
@@ -441,15 +441,13 @@ class Record():
         匹配命令，返回触发功能的序号
         """
         cmd = incmd.replace(" ", "")
-        # if cmd.startswith("报刀"):  # 历史遗留问题
-        #     cmd = cmd[2:]
-        if re.match(r"(报刀|#)\d+[wWkK万]?$", cmd):
+        if re.match(r"^报刀\d+[wWkK万]?$", cmd):
             return 2
         elif (cmd == "尾刀" or cmd == "收尾" or cmd == "收掉" or cmd == "击败"):
             return 3
-        elif re.match(r"\[CQ:at,qq=\d{5,10}\] ?(\d+[wWkK万]?|尾刀|收尾|收掉|击败)", cmd):
+        elif re.match(r"^\[CQ:at,qq=\d{5,10}\] ?(\d+[wWkK万]?|尾刀|收尾|收掉|击败)$", cmd):
             return 400
-        elif re.match(r"@.+[:：].+", cmd):
+        elif re.match(r"^@.+[:：].+", cmd):
             return 401
         elif cmd == "撤销":
             return 5
@@ -487,8 +485,6 @@ class Record():
         实施命令
         """
         cmd = incmd.replace(" ", "")
-        if cmd.startswith("报刀"):  # 历史遗留问题
-            cmd = cmd[2:]
         if func_num == None:
             func_num = self.match(cmd)
         if not os.path.exists(os.path.join(self.__path, "data", self.__groupid+".dat")):
@@ -510,9 +506,7 @@ class Record():
                     "请发送“选择日服”或“选择台服”或“选择国服”")
                 self.__comment += "未选择"
         elif func_num == 2:
-            if cmd.startswith("#"):
-                cmd = cmd[1:]
-            elif cmd.startswith("报刀"):
+            if cmd.startswith("报刀"):
                 cmd = cmd[2:]
             self.__damage(cmd, comment)
         elif func_num == 3:

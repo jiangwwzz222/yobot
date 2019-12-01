@@ -50,6 +50,7 @@ class Char_consult:
             return 0
 
     def execute(self, match_num: int, msg: dict) -> dict:
+        cmd = msg["raw_message"]
         char_id = self.nickname.get(cmd[2:].lower(), None)
         if char_id == None:
             reply = "没有找到【{}】".format(cmd[2:])
