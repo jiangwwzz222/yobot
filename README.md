@@ -8,6 +8,8 @@ chatting bot for pcr(mobile game)
 
 source code in [/src](https://github.com/yuudi/yobot/tree/master/src/client) folder
 
+源码在：[/src](https://github.com/yuudi/yobot/tree/master/src/client)文件夹
+
 introduction in [yobot.xyz](https://yobot.xyz/) page
 
-alse see [pcr-bot league](https://www.pcrbot.com)
+介绍在：[yobot.xyz](https://yobot.xyz/)

@@ -134,6 +134,22 @@ class Updater:
         return match | ver
 
     def execute(self, match_num: int, msg: dict = {}) -> dict:
+        super_admins = self.setting.get("super-admin", list())
+        restrict = self.setting.get("setting-restrict", 3)
+        if msg["sender"]["user_id"] in super_admins:
+            role = 0
+        else:
+            role_str = msg["sender"].get("role", None)
+            if role_str == "owner":
+                role = 1
+            elif role_str == "admin":
+                role = 2
+            else:
+                role = 3
+        if role > restrict:
+            reply = "你的权限不足"
+            return {"reply": reply, "block": True}
+
         match = match_num & 0xf0
         ver = match_num & 0x0f
         if match == 0x10:

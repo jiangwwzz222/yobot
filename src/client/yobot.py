@@ -8,7 +8,7 @@ from typing import List
 from zhconv import convert as zhconvert
 
 from plugins import (boss_dmg, char_consult, gacha, jjc_consult, switcher,
-                     updater, yobot_errors, yobot_msg)
+                     updater, yobot_errors, yobot_msg, custom)
 
 
 class Yobot:
@@ -45,7 +45,8 @@ class Yobot:
             gacha.Gacha(self.glo_setting),
             char_consult.Char_consult(self.glo_setting),
             jjc_consult.Consult(self.glo_setting),
-            boss_dmg.Boss_dmg(self.glo_setting)
+            boss_dmg.Boss_dmg(self.glo_setting),
+            custom.Custom(self.glo_setting)
         ]
 
         if (platform.system() == "Windows"
@@ -63,7 +64,7 @@ class Yobot:
             else:
                 msg["raw_message"] = (
                     msg["raw_message"][len(preffix):])
-        if msg["sender"]["user_id"] in self.glo_setting.get("black-list",list()):
+        if msg["sender"]["user_id"] in self.glo_setting.get("black-list", list()):
             return None
         if self.glo_setting.get("zht_in", False):
             msg["raw_message"] = zhconvert(msg["raw_message"], "zh-hans")

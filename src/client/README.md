@@ -32,4 +32,8 @@ context = {
 }
 ```
 
-主文件`main.py`是利用`aiocqhttp`的应该方法
+主文件`main.py`是利用`aiocqhttp`的应用
+
+## 增加功能
+
+在![custom.py](https://github.com/yuudi/yobot/tree/master/src/client/plugins/custom.py)文件中可以增加简单的功能

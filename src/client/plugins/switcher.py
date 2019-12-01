@@ -26,7 +26,10 @@ class Switcher:
             json.dump(save_setting, f, indent=4, ensure_ascii=False)
 
     def get_url_content(self, url: str) -> Union[int, str]:
-        res = requests.get(url)
+        try:
+            res = requests.get(url)
+        except requests.exceptions.ConnectionError:
+            return -1
         if res.status_code != 200:
             return res.status_code
         else:
@@ -54,7 +57,7 @@ class Switcher:
         if msg["sender"]["user_id"] in super_admins:
             role = 0
         else:
-            role_str = msg["sender"].get("role",None)
+            role_str = msg["sender"].get("role", None)
             if role_str == "owner":
                 role = 1
             elif role_str == "admin":
@@ -74,8 +77,11 @@ class Switcher:
             if isinstance(res, int):
                 reply = "服务器错误：{}".format(res)
             else:
-                new_setting = json.loads(res)
-                if new_setting["version"] != 2919:
+                try:
+                    new_setting = json.loads(res)
+                except json.JSONDecodeError:
+                    reply = "服务器返回值异常"
+                if new_setting.get("version", 0) != 2919:
                     reply = "设置码版本错误"
                 else:
                     self.setting.update(new_setting["settings"])
@@ -94,7 +100,7 @@ class Switcher:
             elif in_code.startswith("AAAB"):
                 reply = setting_old.set_AAAB(in_code[:3:-1])
             else:
-                reply = "位置的设置"
+                reply = "未知的设置"
 
         return {
             "reply": reply,
