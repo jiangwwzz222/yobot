@@ -11,7 +11,7 @@ from plugins import setting
 
 class Switcher:
     code_api = "http://api.yobot.xyz/v3/coding/?code="
-    setting_url = "http://io.yobot.monster/3.0.0-b/settings/"
+    setting_url = "http://io.yobot.monster/3.0.0-s/settings/"
 
     def __init__(self, glo_setting: dict):
         self.setting = glo_setting
@@ -81,7 +81,7 @@ class Switcher:
                     new_setting = json.loads(res)
                 except json.JSONDecodeError:
                     reply = "服务器返回值异常"
-                if new_setting.get("version", 0) != 2919:
+                if new_setting.get("version", 0) != 2999:
                     reply = "设置码版本错误"
                 else:
                     self.setting.update(new_setting["settings"])

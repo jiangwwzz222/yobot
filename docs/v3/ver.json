@@ -1,20 +1,20 @@
 {
     "stable": {
-        "version": 2919,
-        "vername": "yobot[v3.0.0-beta-9]",
-        "url": "http://ybdown.zimingdh.com/yobot2919.zip",
+        "version": 3000,
+        "vername": "yobot[v3.0.0]",
+        "url": "http://ybdown.zimingdh.com/yobot3000.zip",
         "requiredUpdate": false
     },
     "beta": {
-        "version": 2919,
-        "vername": "yobot[v3.0.0-beta-9]",
-        "url": "http://ybdown.zimingdh.com/yobot2919.zip",
+        "version": 3000,
+        "vername": "yobot[v3.0.0]",
+        "url": "http://ybdown.zimingdh.com/yobot3000.zip",
         "requiredUpdate": false
     },
     "alpha": {
-        "version": 2919,
-        "vername": "yobot[v3.0.0-beta-9]",
-        "url": "http://ybdown.zimingdh.com/yobot2919.zip",
+        "version": 3000,
+        "vername": "yobot[v3.0.0]",
+        "url": "http://ybdown.zimingdh.com/yobot3000.zip",
         "requiredUpdate": false
     }
 }

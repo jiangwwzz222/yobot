@@ -13,5 +13,6 @@
     "preffix_on": false,
     "preffix_string": "",
     "zht_in": false,
-    "zht_out": false
+    "zht_out": false,
+    "zht_out_style": "s2t"
 }

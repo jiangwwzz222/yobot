@@ -2,4 +2,4 @@ aiocqhttp>=0.6.8
 APScheduler>=3.6.3
 json5>=0.8.5
 requests>=2.22.0
-zhconv>=1.4.0
+opencc-python-reimplementedzhconv>=0.1.5

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET") {
         $randomString .= $characters[$index];
     }
     mysqli_select_db($con, "1234567");
-    mysqli_query($con, "INSERT INTO Coding (Code, Raws) VALUES ('$randomString', '$_POST[raw]')");
+    mysqli_query($con, "REPLACE INTO Coding (Code, Raws) VALUES ('$randomString', '$_POST[raw]')");
     header("Content-type:text/plain");
     echo $randomString;
 }

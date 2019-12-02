@@ -5,7 +5,7 @@ import platform
 import sys
 from typing import List
 
-from zhconv import convert as zhconvert
+from opencc import OpenCC
 
 from plugins import (boss_dmg, char_consult, gacha, jjc_consult, switcher,
                      updater, yobot_errors, yobot_msg, custom)
@@ -29,14 +29,17 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.0.0-beta-9]",
-                "ver_id": 2919,
+                "ver_name": "yobot[v3.0.0]",
+                "ver_id": 3000,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
                               "https://yuudi.github.io/yobot/v3/ver.json",
                               "http://api.yobot.xyz/v3/version/"]}}
         self.glo_setting.update(inner_info)
+
+        self.ccs2t = OpenCC(self.glo_setting.get("zht_out_style","s2t"))
+        self.cct2s = OpenCC("t2s")
 
         self.plugins = [
             updater.Updater(self.glo_setting),
@@ -67,7 +70,7 @@ class Yobot:
         if msg["sender"]["user_id"] in self.glo_setting.get("black-list", list()):
             return None
         if self.glo_setting.get("zht_in", False):
-            msg["raw_message"] = zhconvert(msg["raw_message"], "zh-hans")
+            msg["raw_message"] = self.cct2s.convert(msg["raw_message"])
         if msg["sender"].get("card", "") == "":
             msg["sender"]["card"] = msg["sender"]["nickname"]
         replys = []
@@ -80,7 +83,7 @@ class Yobot:
                     break
         reply_msg = "\n".join(replys)
         if self.glo_setting.get("zht_out", False):
-            reply_msg = zhconvert(reply_msg, "zh-hant")
+            reply_msg = self.ccs2t.convert(reply_msg)
         return reply_msg
 
     def execute(self, cmd: str):
