@@ -29,13 +29,8 @@ async def handle_msg(context):
 
 async def send_it(func):
     to_sends = func()
-    tasks = [rcnb.send(**kwargs) for kwargs in to_sends]
+    tasks = [rcnb.send_msg(**kwargs) for kwargs in to_sends]
     await asyncio.gather(*tasks)
-
-
-def scheduled_update():
-    print("检查更新...")
-    print(bot.execute("update"))
 
 
 def ask_for_input(msg: str, default: str = "",

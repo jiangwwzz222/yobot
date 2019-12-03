@@ -4,7 +4,7 @@ import os
 import platform
 import sys
 from functools import reduce
-from typing import Any, Callable, Dict, List, Tuple
+from typing import Any, Callable, Dict, Iterable, List, Tuple
 
 from opencc import OpenCC
 
@@ -31,8 +31,8 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.0.1]",
-                "ver_id": 3001,
+                "ver_name": "yobot[v3.1.0-beta]",
+                "ver_id": 3010,
                 "checktime": 0,
                 "latest": True,
                 "check_url": ["https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
@@ -66,7 +66,7 @@ class Yobot:
                   "详情请查看：https://yobot.xyz/p/648/\n"
                   "=================================================")
 
-    def active_jobs(self) -> List[Tuple[Any, Callable[[], List[Dict[str, Any]]]]]:
+    def active_jobs(self) -> List[Tuple[Any, Callable[[], Iterable[Dict[str, Any]]]]]:
         jobs = [p.jobs() for p in self.plug_active]
         return reduce(lambda x, y: x+y, jobs)
 
