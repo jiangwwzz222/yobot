@@ -11,10 +11,12 @@ from plugins import setting, shorten_url
 
 
 class Switcher:
+    Passive = True
+    Active = False
     code_api = "http://api.yobot.xyz/v3/coding/?code="
     setting_url = "http://io.yobot.monster/3.0.1/settings/"
 
-    def __init__(self, glo_setting: dict):
+    def __init__(self, glo_setting: dict, *args, **kwargs):
         self.setting = glo_setting
 
     def save_settings(self) -> None:

@@ -4,20 +4,22 @@ import platform
 import shutil
 import sys
 import zipfile
+from typing import Any, Callable, Dict, Iterable, List, Tuple
 
 import requests
+from apscheduler.triggers.cron import CronTrigger
 
 
 class Updater:
-    def __init__(self, glo_setting: dict):
+    Passive = True
+    Active = True
+
+    def __init__(self, glo_setting: dict, *args, **kwargs):
         self.evn = glo_setting["run-as"]
         self.path = glo_setting["dirname"]
         self.ver = glo_setting["version"]
         self.setting = glo_setting
-        self.runable_powershell = self.get_runable_powershell()
-
-    def check_ver(self) -> bool:
-        return True
+        self._runable_powershell = None
 
     def windows_update(self, force: bool = False, test_ver: int = 0):
         if not self.runable_powershell:
@@ -43,7 +45,7 @@ class Updater:
         try:
             download_file = requests.get(verinfo["url"])
         except:
-            return "无法连接到{}".format(verinfo["url"])
+            return "下载失败：{}".format(verinfo["url"])
         if download_file.status_code != 200:
             return verinfo["url"] + "code:" + str(download_file.status_code)
         fname = os.path.basename(verinfo["url"])
@@ -100,19 +102,17 @@ class Updater:
             os.path.join(git_dir, "update.sh")))
         exit()
 
-    @staticmethod
-    def get_runable_powershell() -> bool:
+    @property
+    def runable_powershell(self) -> bool:
+        if self._runable_powershell is not None:
+            return self._runable_powershell
         r = os.popen("powershell Get-ExecutionPolicy")
         text = r.read()
         if text == "Bypass\n" or text == "RemoteSigned\n" or text == "Unrestricted\n":
+            self._runable_powershell = True
             return True
         else:
-            # try:
-            #     os.system("powershell Set-ExecutionPolice RemoteSigned")
-            # r = os.popen("powershell Get-ExecutionPolicy")
-            # text = r.read()
-            # if text == "Bypass\n" or text == "RemoteSigned\n" or text == "Unrestricted\n":
-            #     return True
+            self._runable_powershell = False
             return False
 
     @staticmethod
@@ -147,7 +147,7 @@ class Updater:
                 role = 2
             else:
                 role = 3
-        if role > restrict and match_num != 0x30:
+        if role > restrict:
             reply = "你的权限不足"
             return {"reply": reply, "block": True}
 
@@ -168,3 +168,23 @@ class Updater:
             "reply": reply,
             "block": True
         }
+
+    def update_auto() -> List[Dict[str, Any]]:
+        if platform.system() == "Windows":
+            if self.evn == "exe":
+                reply = self.windows_update(force, ver)
+            elif self.evn == "py" or self.evn == "python":
+                reply = self.windows_update_git(force, ver)
+        else:
+            reply = self.linux_update(force, ver)
+        print(reply)
+        return []
+
+    def jobs(self) -> Iterable[Tuple[CronTrigger, Callable[[], List[Dict[str, Any]]]]]:
+        if not self.setting.get("auto_update", True):
+            return tuple()
+        time = self.setting.get("update-time", "03:30")
+        hour, minute = time.split(":")
+        trigger = CronTrigger(hour=hour, minute=minute)
+        job = (trigger, self.update_auto)
+        return (job,)
