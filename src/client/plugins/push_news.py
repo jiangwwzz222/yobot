@@ -49,14 +49,18 @@ class News:
                        + "\n-------\n".join(news_list))
 
     def send_news(self) -> Iterable[Dict[str, Any]]:
+        sub_groups = self.setting.get("notify_groups", [])
+        sub_users= self.setting.get("notify_privates", [])
+        if not (sub_groups or sub_users):
+            return
         for msg in self.get_news():
-            for group in self.setting.get("notify_groups", []):
+            for group in sub_groups:
                 yield {
                     "message_type": "group",
                     "group_id": group,
                     "message": msg
                 }
-            for userid in self.setting.get("notify_privates", []):
+            for userid in sub_users:
                 yield {
                     "message_type": "private",
                     "user_id": userid,

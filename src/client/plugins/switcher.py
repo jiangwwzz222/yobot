@@ -134,26 +134,27 @@ class Switcher:
             res = self.get_url_content(self.code_api+in_code)
             if isinstance(res, int):
                 reply = "服务器错误：{}".format(res)
+                return {"reply": reply, "block": True}
+            try:
+                new_setting = json.loads(res)
+            except json.JSONDecodeError:
+                reply = "服务器返回值异常"
+                return {"reply": reply, "block": True}
+            version = new_setting.get("version", 0)
+            if version == 2999:
+                self.setting.update(new_setting["settings"])
+                self.save_settings()
+                reply = "设置成功"
+            elif version == 3098:
+                reply = self.setting_pool(new_setting["settings"])
+            elif version == 3099:
+                reply = self.setting_mail(new_setting["settings"])
+            elif version == 3100:
+                self.setting.update(new_setting["settings"])
+                self.save_settings()
+                reply = "设置成功"
             else:
-                try:
-                    new_setting = json.loads(res)
-                except json.JSONDecodeError:
-                    reply = "服务器返回值异常"
-                version = new_setting.get("version", 0)
-                if version == 2999:
-                    self.setting.update(new_setting["settings"])
-                    self.save_settings()
-                    reply = "设置成功"
-                elif version == 3098:
-                    reply = self.setting_pool(new_setting["settings"])
-                elif version == 3099:
-                    reply = self.setting_mail(new_setting["settings"])
-                elif version == 3100:
-                    self.setting.update(new_setting["settings"])
-                    self.save_settings()
-                    reply = "设置成功"
-                else:
-                    reply = "设置码版本错误"
+                reply = "设置码版本错误"
         elif match_num == 0x500:
             if cmd == "设置卡池":
                 reply = self.setting_url["pool"]
