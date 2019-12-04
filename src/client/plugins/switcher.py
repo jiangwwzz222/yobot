@@ -66,7 +66,7 @@ class Switcher:
         for key in drop_keys:
             del setting_dict[key]
         query = json.dumps(setting_dict, separators=(',', ':'))
-        full_url = self.setting_url["global"] + "?form="+quote(query)
+        full_url = self.setting_url["global"] + "?form=" + quote(query)
         return shorten_url.shorten(full_url)
 
     def setting_pool(self, pool: dict) -> str:
@@ -74,7 +74,7 @@ class Switcher:
         poolfile = os.path.join(self.setting["dirname"], "pool.json")
         with open(poolfile, "w", encoding="utf-8") as f:
             json.dump(pool, f, indent=4, ensure_ascii=False)
-        return '设置成功'
+        return "设置成功，重启后生效\n发送“重启”可自动重新启动"
 
     def setting_mail(self, code: str) -> str:
         while code.endswith('='):

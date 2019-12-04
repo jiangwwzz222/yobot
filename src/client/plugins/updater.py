@@ -60,13 +60,14 @@ class Updater:
         shutil.move(os.path.join(self.path, "temp", verstr, "yobot.exe"),
                     os.path.join(self.path, "yobot.new.exe"))
         cmd = '''
-            start-sleep 2
-            kill -processname yobot
+            cd "{}"
+            start-sleep 1
+            Stop-Process -Id {}
             start-sleep 2
             Remove-Item "yobot.exe"
             rename-Item "yobot.new.exe" -NewName "yobot.exe"
             Start-Process -FilePath "yobot.exe"
-            '''
+            '''.format(self.path, os.getpid())
         with open(os.path.join(self.path, "update.ps1"), "w") as f:
             f.write(cmd)
         os.system("powershell -file " + os.path.join(self.path, "update.ps1"))
@@ -77,10 +78,12 @@ class Updater:
             return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
         git_dir = os.path.dirname(os.path.dirname(self.path))
         cmd = '''
+        cd "{}"
         git pull
+        Stop-Process -Id {}
         start-sleep 1
         Start-Process -FilePath "python.exe" -ArgumentList "{}"
-        '''.format(os.path.join(self.path, "main.py"))
+        '''.format(self.path, os.getpid())
         with open(os.path.join(git_dir, "update.ps1"), "w") as f:
             f.write(cmd)
         os.system('powershell -file "'
@@ -92,15 +95,52 @@ class Updater:
         cmd = '''
         cd "{}"
         git pull
+        kill {}
         sleep 1s
         cd src/client
         python3 main.py
-        '''.format(git_dir)
+        '''.format(git_dir, os.getpid())
         with open(os.path.join(git_dir, "update.sh"), "w") as f:
             f.write(cmd)
         os.system("chmod u+x {0} && {0}".format(
             os.path.join(git_dir, "update.sh")))
         exit()
+
+    def restart(self):
+        self_pid = os.getpid()
+        if platform.system() == "Windows":
+            if not self.runable_powershell:
+                return "无法更新，没有powershell权限，帮助页面https://yobot.xyz/p/648/"
+            if self.evn == "exe":
+                cmd = '''
+                    start-sleep 1
+                    Stop-Process -Id {}
+                    start-sleep 2
+                    Start-Process -FilePath "{}"
+                    '''.format(self_pid, os.path.join(self.path, "yobot.exe"))
+            elif self.evn == "py" or self.evn == "python":
+                cmd = '''
+                    Stop-Process -Id {}
+                    start-sleep 1
+                    Start-Process -FilePath "python.exe" -ArgumentList "{}"
+                    '''.format(self_pid, os.path.join(self.path, "main.py"))
+            with open(os.path.join(self.path, "restart.ps1"), "w") as f:
+                f.write(cmd)
+            os.system("powershell -file "
+                      + os.path.join(self.path, "restart.ps1"))
+            exit()
+        else:
+            cmd = '''
+            kill {}
+            sleep 1s
+            cd {}
+            python3 main.py
+            '''.format(self_pid, self.path)
+            with open(os.path.join(self.path, "restart.sh"), "w") as f:
+                f.write(cmd)
+            os.system("chmod u+x {0} && {0}".format(
+                os.path.join(self.path, "restart.sh")))
+            exit()
 
     @property
     def runable_powershell(self) -> bool:
@@ -123,6 +163,8 @@ class Updater:
         elif cmd.startswith("强制更新"):
             para = cmd[4:]
             match = 0x20
+        elif cmd == "重启" or cmd == "重新启动":
+            return 0x40
         else:
             return 0
         para = para.replace(" ", "")
@@ -130,8 +172,10 @@ class Updater:
             ver = 2
         elif para == "beta":
             ver = 1
-        else:
+        elif para == "":
             ver = 0
+        else:
+            return 0
         return match | ver
 
     def execute(self, match_num: int, msg: dict = {}) -> dict:
@@ -151,6 +195,9 @@ class Updater:
             reply = "你的权限不足"
             return {"reply": reply, "block": True}
 
+        if match_num == 0x40:
+            reply = self.restart()
+            return {"reply": reply, "block": True}
         match = match_num & 0xf0
         ver = match_num & 0x0f
         if match == 0x10:
