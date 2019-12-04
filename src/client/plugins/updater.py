@@ -169,7 +169,7 @@ class Updater:
             "block": True
         }
 
-    def update_auto() -> List[Dict[str, Any]]:
+    def update_auto(self) -> List[Dict[str, Any]]:
         if platform.system() == "Windows":
             if self.evn == "exe":
                 reply = self.windows_update(force, ver)

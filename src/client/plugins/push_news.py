@@ -45,7 +45,7 @@ class News:
                     "标题：{title}\n链接：{link}\n{summary}".format_map(item)
                 )
             if news_list:
-                yield (rss_source["name"]+"更新：\n======="
+                yield (rss_source["name"]+"更新：\n=======\n"
                        + "\n-------\n".join(news_list))
 
     def send_news(self) -> Iterable[Dict[str, Any]]:
