@@ -12,6 +12,7 @@
     "gacha_private_on": true,
     "news_jp_official": true,
     "news_jp_twitter": true,
+    "news_tw_official": true,
     "news_interval_minutes": 30,
     "notify_groups": [],
     "notify_privates": [],

@@ -1,8 +1,8 @@
+*.py[cdo]
 .vscode/
 src/client/*.bat
 src/client/*/
 !src/client/plugins/
-src/client/plugins/__pycache__/
 src/client/*.json
 !src/client/yobot_config.json
 src/client/*.csv

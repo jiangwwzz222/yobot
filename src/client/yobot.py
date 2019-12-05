@@ -31,7 +31,7 @@ class Yobot:
         inner_info = {
             "dirname": dirname,
             "version": {
-                "ver_name": "yobot[v3.1.1]",
+                "ver_name": "yobot[v3.1.2-alpha]",
                 "ver_id": 3101,
                 "checktime": 0,
                 "latest": True,

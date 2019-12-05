@@ -4,7 +4,7 @@ from typing import Any, Callable, Dict, Iterable, Tuple, Union
 import feedparser
 from apscheduler.triggers.interval import IntervalTrigger
 
-from . import spider
+from spider import Spiders
 
 
 class News:
@@ -13,6 +13,7 @@ class News:
 
     def __init__(self, glo_setting: dict, *args, **kwargs):
         self.setting = glo_setting
+        self.spiders = Spiders()
         self.rss = {
             "news_jp_twitter": {
                 "name": "日服推特",
@@ -28,7 +29,11 @@ class News:
             }
         }
 
-    def get_news(self) -> Iterable[Union[None, str]]:
+    def get_news(self) -> Iterable[str]:
+        '''
+        返回最新消息（迭代器）
+        '''
+        # RSS
         subscripts = [s for s in self.rss.keys() if self.setting.get(s, True)]
         for source in subscripts:
             rss_source = self.rss[source]
@@ -49,6 +54,12 @@ class News:
             if news_list:
                 yield (rss_source["name"]+"更新：\n=======\n"
                        + "\n-------\n".join(news_list))
+        # spider
+        subscripts = [s for s in self.spiders.sources() if self.setting.get(s, True)]
+        for source in subscripts:
+            news = self.spiders[source].get_news()
+            if news is not None:
+                yield news
 
     def send_news(self) -> Iterable[Dict[str, Any]]:
         sub_groups = self.setting.get("notify_groups", [])
