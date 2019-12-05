@@ -59,13 +59,6 @@ class Yobot:
         self.plug_passive = [p for p in plug_all if p.Passive]
         self.plug_active = [p for p in plug_all if p.Active]
 
-        if (platform.system() == "Windows"
-                and not updater_plugin.runable_powershell):
-            print("=================================================\n"
-                  "powershell不可用，无法自动更新，请检查powershell权限\n"
-                  "详情请查看：https://yobot.xyz/p/648/\n"
-                  "=================================================")
-
     def active_jobs(self) -> List[Tuple[Any, Callable[[], Iterable[Dict[str, Any]]]]]:
         jobs = [p.jobs() for p in self.plug_active]
         return reduce(lambda x, y: x+y, jobs)
