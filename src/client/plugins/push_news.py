@@ -72,6 +72,6 @@ class News:
             return tuple()
         interval = self.setting.get("news_interval_minutes", 30)
         trigger = IntervalTrigger(
-            minutes=interval, start_date=datetime.datetime.now()+datetime.timedelta(seconds=5))
+            minutes=interval, start_date=datetime.datetime.now()+datetime.timedelta(seconds=60))
         job = (trigger, self.send_news)
         return (job,)
