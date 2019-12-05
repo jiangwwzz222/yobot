@@ -4,6 +4,8 @@ from typing import Any, Callable, Dict, Iterable, Tuple, Union
 import feedparser
 from apscheduler.triggers.interval import IntervalTrigger
 
+from . import spider
+
 
 class News:
     Passive = False
