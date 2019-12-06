@@ -1,10 +1,10 @@
 import datetime
-from typing import Any, Callable, Dict, Iterable, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, Tuple
 
 import feedparser
 from apscheduler.triggers.interval import IntervalTrigger
 
-from spider import Spiders
+from .spider import Spiders
 
 
 class News:
@@ -26,6 +26,12 @@ class News:
                 "source": "https://priconne-redive.jp/news/feed/",
                 "pattern": "标题：{title}\n链接：{link}\n{summary}",
                 "last_id": None
+            },
+            "news_tw_facebook": {
+                "name": "台服FaceBook",
+                "source": "https://rsshub.app/facebook/page/SonetPCR",
+                "pattern": "链接：{link}",
+                "last_id": None
             }
         }
 
@@ -44,7 +50,7 @@ class News:
             last_id = rss_source["last_id"]
             rss_source["last_id"] = feed["entries"][0]["id"]
             if last_id is None:
-                print("rss初始化"+rss_source["name"])
+                print("rss初始化："+rss_source["name"])
                 continue
             news_list = list()
             for item in feed["entries"]:
@@ -55,7 +61,8 @@ class News:
                 yield (rss_source["name"]+"更新：\n=======\n"
                        + "\n-------\n".join(news_list))
         # spider
-        subscripts = [s for s in self.spiders.sources() if self.setting.get(s, True)]
+        subscripts = [s for s in self.spiders.sources()
+                      if self.setting.get(s, True)]
         for source in subscripts:
             news = self.spiders[source].get_news()
             if news is not None:

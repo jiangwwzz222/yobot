@@ -6,6 +6,8 @@ function Confirm() {
     });
     formData["news_jp_official"] = formData["news_jp_official"] == "on";
     formData["news_jp_twitter"] = formData["news_jp_twitter"] == "on";
+    formData["news_tw_official"] = formData["news_tw_official"] == "on";
+    formData["news_tw_facebook"] = formData["news_tw_facebook"] == "on";
     if (!/^\d+$/.test(formData["news_interval_minutes"])) {
         alert("请填写正确的间隔");
         return
@@ -33,7 +35,7 @@ function Confirm() {
         }
         formData["notify_privates"] = formData["notify_privates"].split("\r\n").map(function (x) { return parseInt(x); });
     }
-    var text = JSON.stringify({ version: 3100, settings: formData });
+    var text = JSON.stringify({ version: 3102, settings: formData });
     $.post("1234567"/*this is coding-api address*/, { raw: text }, function (data) {
         $('#pc #setting_code').attr("value", "设置码" + data);
     });

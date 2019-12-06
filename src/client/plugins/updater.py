@@ -15,9 +15,9 @@ class Updater:
     Active = True
 
     def __init__(self, glo_setting: dict, *args, **kwargs):
-        self.evn = glo_setting["run-as"]
+        self.evn = glo_setting["verinfo"]["run-as"]
         self.path = glo_setting["dirname"]
-        self.ver = glo_setting["version"]
+        self.ver = glo_setting["verinfo"]
         self.setting = glo_setting
 
     def windows_update(self, force: bool = False, test_ver: int = 0):
@@ -69,7 +69,7 @@ class Updater:
             f.write(cmd)
         os.system('powershell Start-Process -FilePath "{}"'.format(
             os.path.join(self.path, "update.bat")))
-        exit()
+        sys.exit()
 
     def windows_update_git(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
@@ -84,7 +84,7 @@ class Updater:
             f.write(cmd)
         os.system('powershell Start-Process -FilePath "{}"'.format(
             os.path.join(git_dir, "update.bat")))
-        exit()
+        sys.exit()
 
     def linux_update(self, force: bool = False, test_ver: int = 0):
         git_dir = os.path.dirname(os.path.dirname(self.path))
@@ -100,7 +100,7 @@ class Updater:
             f.write(cmd)
         os.system("chmod u+x {0} && {0}".format(
             os.path.join(git_dir, "update.sh")))
-        exit()
+        sys.exit()
 
     def restart(self):
         self_pid = os.getpid()
@@ -123,7 +123,7 @@ class Updater:
                 f.write(cmd)
             os.system('powershell Start-Process -FilePath "{}"'.format(
                       os.path.join(self.path, "restart.bat")))
-            exit()
+            sys.exit()
         else:
             cmd = '''
             kill {}
@@ -135,7 +135,7 @@ class Updater:
                 f.write(cmd)
             os.system("chmod u+x {0} && {0}".format(
                 os.path.join(self.path, "restart.sh")))
-            exit()
+            sys.exit()
 
     @staticmethod
     def match(cmd: str) -> int:
@@ -199,6 +199,7 @@ class Updater:
         }
 
     def update_auto(self) -> List[Dict[str, Any]]:
+        print("自动检查更新...")
         if platform.system() == "Windows":
             if self.evn == "exe":
                 reply = self.windows_update()
@@ -217,3 +218,47 @@ class Updater:
         trigger = CronTrigger(hour=hour, minute=minute)
         job = (trigger, self.update_auto)
         return (job,)
+
+
+def get_version(base_version: str, base_commit: Dict[str, int]) -> dict:
+    if sys.argv[0].endswith(".exe"):
+        return {
+            "run-as": "exe",
+            "ver_name": base_version,
+            "ver_id": 3000 + sum(base_commit.values()),
+            "check_url": [
+                "https://gitee.com/yobot/yobot/raw/master/docs/v3/ver.json",
+                "https://yuudi.github.io/yobot/v3/ver.json",
+                "http://api.yobot.xyz/v3/version/"
+            ]
+        }
+    with os.popen("git diff HEAD --stat") as r:
+        text = r.read()
+    if text != "":
+        return {
+            "run-as": "python",
+            "commited": False,
+            "ver_name": "yobot源码版\n基于{}\n未提交的版本".format(base_version)
+        }
+    with os.popen("git shortlog --numbered --summary") as r:
+        summary = r.read()
+    with os.popen("git rev-parse HEAD") as r:
+        hash_ = r.read().strip()
+    logs = summary.split()
+    commits = {}
+    for key in base_commit.keys():
+        commits[key] = -base_commit[key]
+    for count, usrmail in zip(logs[::2], logs[1::2]):
+        usr = usrmail.split("@")[0].split("+")[-1]
+        commits[usr] = int(count) + commits.get(usr, 0)
+    vername = "yobot源码版\n{}".format(base_version)
+    extra_commit = ["{}: {}".format(c, commits[c])
+                    for c in commits if commits[c] != 0]
+    if extra_commit:
+        vername += "\n额外的提交：\n" + "\n".join(extra_commit)
+    vername += "\nhash: {}".format(hash_)
+    return {
+        "run-as": "python",
+        "commited": True,
+        "ver_name": vername
+    }

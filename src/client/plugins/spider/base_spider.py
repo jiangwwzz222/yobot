@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Iterator, List, Tuple, Union
+from typing import Iterator, List, Tuple, Union
 from urllib.parse import urlparse
 
 import requests
@@ -24,7 +24,6 @@ class Base_spider:
     def get_content(self) -> Tuple[str, int]:
         headers = {
             "Host": urlparse(self.url).netloc,
-            "Connection": "keep-alive",
             "Upgrade-Insecure-Requests": "1",
             "User-Agent": "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
@@ -42,6 +41,7 @@ class Base_spider:
         if code == 200:
             return BeautifulSoup(text, "html.parser")
         else:
+            print("咨询获取错误：{}，错误码：{}".format(self.name, code))
             return None
 
     def get_items(self) -> List[Item]: ...
