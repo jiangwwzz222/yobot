@@ -1,5 +1,7 @@
 from plugins import search_data, json_deal
 import os
+from opencc import OpenCC
+
 
 contPath = "./plugins/cont"
 outPath = "./plugins/cont"
@@ -10,7 +12,7 @@ def init():
         json_deal.decodeFile(item)
 
     for item in os.listdir(contPath):
-        search_data.store[item[:-4]] = json_deal.decodejson(item)
+        search_data.store[OpenCC("t2s").convert(item[:-4])] = json_deal.decodejson(item)
     util_data = search_data.store['unit_data']
     unit_promotion = search_data.store['unit_promotion']
     equipment_data = search_data.store['equipment_data']
