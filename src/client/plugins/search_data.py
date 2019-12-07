@@ -37,8 +37,7 @@ def calc_util_equip( utilid ):
         if int(key) < 500000:
             name = store['equipment_data'][key]['equipment_name']
             count = rec[key]
-            retstr += name + ":" + str(count)
-            retstr += "#换行符"
+            retstr += name + ":" + str(count) + " \n"
     return retstr
     # else:
     #     return ""
