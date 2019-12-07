@@ -1,8 +1,8 @@
 from plugins import search_data, json_deal
 import os
 
-contPath = "./../cont"
-outPath = "./../cont"
+contPath = "./cont"
+outPath = "./cont"
 
 
 def init():
