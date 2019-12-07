@@ -1,11 +1,12 @@
 from plugins import search_data, json_deal
 import os
 
-contPath = "cont"
-outPath = "cont"
+contPath = "./cont"
+outPath = "./cont"
 
 
 def init():
+    print(os.listdir('.'))
     print(os.listdir(contPath))
     for top, dirs, nondirs in os.listdir(contPath):
         for item in nondirs:
