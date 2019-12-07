@@ -4,14 +4,14 @@ import base64
 
 
 def decodeFile(fileName):
-    Path = "./cont/"+fileName
+    Path = "./plugins/cont/"+fileName
     file = open(Path, 'r+')
     tmpStr = file.read()
     list =re.split('.+"(.+)".*', tmpStr)
     str = list[1]
     file.close()
     newStr = base64.b64decode(str)
-    newPath = "./out/"+fileName
+    newPath = "./plugins/out/"+fileName
     # os.mknod(newPath)
     newStr2 = newStr.decode("utf-8")
     newStr3 = newStr2.encode('utf-8').decode('unicode_escape')
