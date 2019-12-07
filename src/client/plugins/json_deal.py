@@ -22,7 +22,7 @@ def decodeFile(fileName):
 
 
 def decodejson( filename ):
-    path = "./out/"+filename
+    path = "./plugins/out/"+filename
     file = open(path, 'r+', encoding='utf-8')
     tmpstr = file.read()
     tmpstr2 = tmpstr.replace('\\', '\\\\')
