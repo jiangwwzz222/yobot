@@ -1,4 +1,4 @@
-from yobot.src.client.plugins import search_data, json_deal
+from client.plugins import search_data, json_deal
 import os
 
 contPath = "./../cont"
