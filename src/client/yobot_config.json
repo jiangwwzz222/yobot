@@ -1,13 +1,17 @@
 {
-    "host": "127.0.0.1",
-    "port": 9222,
+    "host": "0.0.0.0",
+    "port": 8080,
     "run-as": "python",
-    "super-admin": [],
-    "black-list": [],
-    "setting-restrict": 3,
+    "super-admin": [
+        819211833
+    ],
+    "black-list": [
+        0
+    ],
+    "setting-restrict": 2,
     "auto_update": true,
     "update-time": "03:30",
-    "show_jjc_solution": "url",
+    "show_jjc_solution": "text",
     "gacha_on": true,
     "gacha_private_on": true,
     "news_jp_official": true,
@@ -15,9 +19,9 @@
     "news_interval_minutes": 30,
     "notify_groups": [],
     "notify_privates": [],
-    "preffix_on": false,
-    "preffix_string": "",
-    "zht_in": false,
+    "preffix_on": true,
+    "preffix_string": "#",
+    "zht_in": true,
     "zht_out": false,
     "zht_out_style": "s2t"
 }

@@ -8,7 +8,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 import yobot
 
-rcnb = CQHttp(access_token='your-token',
+rcnb = CQHttp(access_token='token-yukikaze',
               enable_http_post=False)
 
 bot = yobot.Yobot()
