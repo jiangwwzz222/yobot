@@ -21,6 +21,7 @@ class Custom:
     def __init__(self, glo_setting: dict, *args, **kwargs):
         '''初始化，只在启动时执行一次'''
         data_deal.init()
+        print(search_data.store['unit_data']['鏡華'])
 
 
         # 如果需要使用，请注释掉下面一行
@@ -48,6 +49,7 @@ class Custom:
         if cmd.startswith('装备查询'):
             utilname = cmd.replace('装备查询', '')
             if utilname in search_data.store['unit_data']:
+                print('search :' + utilname)
                 return int(search_data.store['unit_data'][utilname]['unit_id'])
         else:
             return 0

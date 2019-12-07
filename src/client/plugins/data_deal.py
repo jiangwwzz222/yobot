@@ -7,11 +7,9 @@ outPath = "./plugins/cont"
 
 def init():
     for item in os.listdir(contPath):
-        print("json init" + item)
         json_deal.decodeFile(item)
 
     for item in os.listdir(contPath):
-        print("out init" + item)
         search_data.store[item[:-4]] = json_deal.decodejson(item)
     util_data = search_data.store['unit_data']
     unit_promotion = search_data.store['unit_promotion']
