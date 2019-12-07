@@ -6,8 +6,8 @@ outPath = "cont"
 
 
 def init():
-    print(os.walk(contPath))
-    for top, dirs, nondirs in os.walk(contPath):
+    print(os.listdir(contPath))
+    for top, dirs, nondirs in os.listdir(contPath):
         for item in nondirs:
             print("json init" + item)
             json_deal.decodeFile(item)
