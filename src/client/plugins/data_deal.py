@@ -6,6 +6,7 @@ outPath = "./cont"
 
 
 def init():
+    print(os.walk())
     for top, dirs, nondirs in os.walk(contPath):
         for item in nondirs:
             print("json init" + item)
