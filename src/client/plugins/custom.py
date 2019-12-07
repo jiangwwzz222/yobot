@@ -11,7 +11,7 @@ https://github.com/richardchien/python-aiocqhttp
 或者
 https://github.com/richardchien/nonebot
 '''
-from yobot.src.client.plugins import data_deal, search_data
+from client.plugins import data_deal, search_data
 
 
 class Custom:
