@@ -35,6 +35,3 @@ def init():
             list3[data['equipment_id']] = data
     search_data.store['equipment_data'] = list3
 
-
-print(search_data.calc_util_equip("日和"))
-
