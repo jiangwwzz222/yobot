@@ -11,6 +11,7 @@ https://github.com/richardchien/python-aiocqhttp
 或者
 https://github.com/richardchien/nonebot
 '''
+from yobot.src.client.plugins import data_deal, search_data
 
 
 class Custom:
@@ -19,9 +20,11 @@ class Custom:
 
     def __init__(self, glo_setting: dict, *args, **kwargs):
         '''初始化，只在启动时执行一次'''
+        data_deal.init()
+
 
         # 如果需要使用，请注释掉下面一行
-        return
+        # return
 
         # 获取全局设置，注意：全局设置影响所有功能
         self.settings = glo_setting
@@ -40,12 +43,12 @@ class Custom:
         '''
 
         # 如果需要使用，请注释掉下面一行
-        return 0  # 不处理任何消息
+        # return 0  # 不处理任何消息
 
-        if cmd == "你好":
-            return 1
-        elif cmd == "来份色图":
-            return 2
+        if cmd.startswith('装备查询'):
+            utilname = cmd.replace('装备查询', '')
+            if utilname in search_data.store['unit_data']:
+                return int(search_data.store['unit_data'][utilname]['unit_id'])
         else:
             return 0
 
@@ -57,24 +60,25 @@ class Custom:
         返回：见下面的注释
         '''
 
-        if match_num == 1:
-            reply = "世界"  # 回复一个字符串
-        elif match_num == 2:
-            # 回复一个字符串和一个图片
-            reply = [
-                {
-                    "type": "text",
-                    "data": {"text": "图来了"}
-                },
-                {
-                    "type": "image",
-                    "date": {
-                        "file": "http://api.v3.yobot.xyz/draw.jpg",
-                        "cache": "0",
-                    }
-                }
-            ]
+        retstr = search_data.calc_util_equip(str(match_num))
+        # if match_num == 1:
+        #     reply = "世界"  # 回复一个字符串
+        # elif match_num == 2:
+        #     # 回复一个字符串和一个图片
+        #     reply = [
+        #         {
+        #             "type": "text",
+        #             "data": {"text": "图来了"}
+        #         },
+        #         {
+        #             "type": "image",
+        #             "date": {
+        #                 "file": "http://api.v3.yobot.xyz/draw.jpg",
+        #                 "cache": "0",
+        #             }
+        #         }
+        #     ]
         return {
-            "reply": reply,  # 具体回复格式请参考https://cqhttp.cc/docs/#/Message
+            "reply": retstr,  # 具体回复格式请参考https://cqhttp.cc/docs/#/Message
             "block": True  # 是否直接返回，阻止后续执行
         }
