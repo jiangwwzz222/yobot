@@ -9,7 +9,7 @@
         0
     ],
     "setting-restrict": 2,
-    "auto_update": true,
+    "auto_update": false,
     "update-time": "03:30",
     "show_jjc_solution": "text",
     "gacha_on": true,
